@@ -1,3 +1,7 @@
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+
 # Built application files
 *.apk
 *.ap_
