@@ -75,13 +75,14 @@ public class GeocodingParkingActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent returnIntent = new Intent();
                 if (currPos!=null) {
+                    Intent showDetails = new Intent(getApplicationContext(), AddParkingDetailsActivity.class);
                     Bundle data = new Bundle();
                     data.putParcelable("pos", currPos);
-                    returnIntent.putExtra("bundle", data);
+                    showDetails.putExtra("bundle", data);
+                    showDetails.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    startActivity(showDetails);
                 }
-                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
         });
@@ -95,6 +96,7 @@ public class GeocodingParkingActivity extends AppCompatActivity
         final int width = mapView.getMeasuredWidth();
         final int height = mapView.getMeasuredHeight();
 
+        // Setup the crosshair pin
         dropPinView = new ImageView(this);
         dropPinView.setImageResource(R.drawable.ic_dropping_24dp);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(

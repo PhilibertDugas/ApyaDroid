@@ -52,7 +52,6 @@
         android:maxLines="1"
         android:textColor="@android:color/black"/>
 
-    <!-- TODO: Style this accordingly -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
