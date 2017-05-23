@@ -1,28 +1,16 @@
 package com.carko.carko;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ParkingTabActivity extends AppCompatActivity {
 
@@ -31,6 +19,10 @@ public class ParkingTabActivity extends AppCompatActivity {
     private ParkingViewPagerAdapter viewPagerAdapter;
 
     private final int PLACE_PARKING_REQUEST = 1;
+
+    public static final String FRAGMENT_TO_LAUNCH_EXTRA = "com.carko.carko.FragmentToLaunch";
+    public enum FragmentToLaunch{ VIEW, EDIT, CREATE }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +90,7 @@ public class ParkingTabActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_add_parking) {
-            Intent intent = new Intent(this, GeocodingParkingActivity.class);
+            Intent intent = new Intent(this, AddParkingMapActivity.class);
             startActivityForResult(intent,PLACE_PARKING_REQUEST);
             return true;
         }

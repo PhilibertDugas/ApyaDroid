@@ -42,10 +42,10 @@
             android:name=".ParkingTabActivity"
             android:parentActivityName=".LoginActivity" />
         <activity
-            android:name=".GeocodingParkingActivity"
+            android:name=".AddParkingMapActivity"
             android:label="@string/locate_parking"
             android:parentActivityName=".ParkingTabActivity" />
-        <activity android:name=".AddParkingDetailsActivity"></activity>
+        <activity android:name=".AddParkingDetailActivity"></activity>
     </application>
 
 </manifest>
