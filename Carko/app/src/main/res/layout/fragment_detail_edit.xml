@@ -25,10 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/address_label" />
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dummy_parking_address"
+            android:hint="@string/address_hint"
             android:id="@+id/parkingAddress"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:maxLines="1"
@@ -45,10 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/description_label" />
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Placeholder"
+            android:hint="@string/description_hint"
             android:id="@+id/parkingDescription"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
         <TextView
@@ -105,5 +105,12 @@
 
     </LinearLayout>
 
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/pacmanjaune"
+        android:id="@+id/saveButton"
+        android:text="@string/detail_edit_save_button"/>
 
 </LinearLayout>

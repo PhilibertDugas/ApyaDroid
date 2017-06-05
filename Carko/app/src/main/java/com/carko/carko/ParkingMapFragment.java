@@ -2,11 +2,13 @@ package com.carko.carko;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mapbox.mapboxsdk.MapboxAccountManager;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -22,6 +24,7 @@ public class ParkingMapFragment extends Fragment
     private View fragmentLayout;
     private View customInfoWindow;
     private MapView mapView;
+    private MapboxMap map;
 
     public ParkingMapFragment() {
         // Required empty public constructor
@@ -35,7 +38,6 @@ public class ParkingMapFragment extends Fragment
         fragmentLayout = inflater.inflate(R.layout.fragment_parking_map, container, false);
         customInfoWindow = inflater.inflate(R.layout.content_marker_info, null);
 
-
         mapView = (MapView) fragmentLayout.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
@@ -47,16 +49,14 @@ public class ParkingMapFragment extends Fragment
 
     @Override
     public void onMapReady(MapboxMap mMap) {
-        mMap.setInfoWindowAdapter(new ParkingInfoWindowAdapter(customInfoWindow));
+        map = mMap;
+        map.setInfoWindowAdapter(new ParkingInfoWindowAdapter(customInfoWindow));
+    }
 
-        // Interact with the map using mapboxMap here
-        // TODO: Build map from <Marker Id> -> <Parking>
-        MarkerViewOptions taisei = new MarkerViewOptions()
-                .position(new LatLng(45.547624, -73.662455))
-                .title("Tai Sei")
-                .snippet("Taisei Karate Dojo");
-
-        mMap.addMarker(taisei);
+    public void addMarker(LatLng pos){
+        final MarkerOptions marker = new MarkerOptions().position(pos);
+        Log.d("addMarker", pos.toString());
+        map.addMarker(marker);
     }
 
     @Override

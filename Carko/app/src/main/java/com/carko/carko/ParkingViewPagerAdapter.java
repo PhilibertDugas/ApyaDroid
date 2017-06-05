@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class ParkingViewPagerAdapter extends FragmentStatePagerAdapter {
 
+    Fragment one, two, three;
+
     public ParkingViewPagerAdapter(FragmentManager fm){
         super(fm);
     }
@@ -19,13 +21,19 @@ public class ParkingViewPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment;
         switch(position){
             case 0:
-                fragment = new ParkingMapFragment();
+                if (one == null)
+                    one = new ParkingMapFragment();
+                fragment = one;
                 break;
             case 1:
-                fragment = new ParkingListFragment();
+                if (two == null)
+                    two = new ParkingListFragment();
+                fragment = two;
                 break;
             case 2:
-                fragment = new MainTabFragment();
+                if (three == null)
+                    three = new MainTabFragment();
+                fragment = three;
                 break;
             default:
                 fragment = new MainTabFragment();

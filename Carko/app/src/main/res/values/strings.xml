@@ -37,10 +37,13 @@
     <string name="detail_view_fragment_title">Parking</string>
     <string name="detail_edit_fragment_title">Parking</string>
     <string name="address_label">Address</string>
+    <string name="address_hint">Your address</string>
     <string name="description_label">Description</string>
+    <string name="description_hint">Write a short description...</string>
     <string name="availability_label">Availability</string>
     <string name="rates_label">Rates</string>
     <string name="profit_label">Profit</string>
+    <string name="detail_edit_save_button">Save</string>
 
     <!-- Marker info -->
     <string name="marker_info_tap">Tap to continue…</string>
@@ -52,5 +55,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_hamburger">HamburgerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>

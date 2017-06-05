@@ -1,6 +1,7 @@
 package com.carko.carko;
 
 import android.content.Intent;
+import android.graphics.PointF;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
-public class ParkingTabActivity extends AppCompatActivity {
+public class  ParkingTabActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -22,7 +24,6 @@ public class ParkingTabActivity extends AppCompatActivity {
 
     public static final String FRAGMENT_TO_LAUNCH_EXTRA = "com.carko.carko.FragmentToLaunch";
     public enum FragmentToLaunch{ VIEW, EDIT, CREATE }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,11 @@ public class ParkingTabActivity extends AppCompatActivity {
                 // TODO: Add parking to database
                 Bundle bundle = data.getParcelableExtra("bundle");
                 LatLng pos = bundle != null ? (LatLng) bundle.getParcelable("pos") : null;
+                int index = viewPager.getCurrentItem();
+                ParkingViewPagerAdapter adapter = (ParkingViewPagerAdapter) viewPager.getAdapter();
+                ParkingMapFragment fragment = (ParkingMapFragment) adapter.getItem(index);
+//                Toast.makeText(this, fragment != null ? "yaas" : "nope", Toast.LENGTH_LONG).show();
+                fragment.addMarker(pos);
                 Toast.makeText(this, pos != null ? pos.toString() : "No parkings", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "No parkings", Toast.LENGTH_SHORT).show();

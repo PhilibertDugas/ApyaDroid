@@ -55,7 +55,7 @@ public class AddParkingMapActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set up the MapView
-        mapView = (MapView) findViewById(R.id.mapView);
+        mapView = (MapView) findViewById(R.id.addMapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class ParkingDetailActivity extends AppCompatActivity {
     private static String TAG = "ParkingDetailActivity";
 
     private ImageButton image;
+    private Button saveButton;
     ArrayList<Parking> parkings;
     ParkingAdapter parkingAdapter;
 
