@@ -23,7 +23,9 @@ public class ParkingAdapter extends ArrayAdapter<Parking> {
         TextView preview;
     }
 
-    ParkingAdapter(Context context, ArrayList<Parking> parkings){ super(context, 0, parkings); }
+    ParkingAdapter(Context context, ArrayList<Parking> parkings){
+        super(context, 0, parkings);
+    }
 
     @Override
     public View getView(int pos, View convertView, ViewGroup parent){

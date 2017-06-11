@@ -46,10 +46,6 @@
             android:label="@string/locate_parking"
             android:parentActivityName=".ParkingTabActivity" />
         <activity android:name=".AddParkingDetailActivity" />
-        <activity
-            android:name=".HamburgerActivity"
-            android:label="@string/title_activity_hamburger"
-            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -1,156 +1,111 @@
 package com.carko.carko;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private MainViewPagerAdapter viewPagerAdapter;
-
-    private Button signInButton;
-
-    private final int CARKO_PERMISSION_LOCATION = 1;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("MainActivity","onCreate");
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        signInButton = (Button) findViewById(R.id.sign_in_button);
-        signInButton.setEnabled(false);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-        tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
-        viewPager = (ViewPager) findViewById(R.id.main_view_pager);
-        viewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager());
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        viewPager.setAdapter(viewPagerAdapter);
+        GridView gridview = (GridView) findViewById(R.id.eventsGridView);
+        ArrayList<Event> events = new ArrayList<Event>();
+        events.add(new Event(0, R.drawable.pacman, "Orange Pacman"));
+        events.add(new Event(1, R.drawable.pacmanjaune, "Yellow Pacman"));
+        events.add(new Event(2, R.drawable.ghost, "Ghost"));
+        events.add(new Event(3, R.drawable.ic_menu_camera, "Camera"));
+        events.add(new Event(4, R.drawable.ic_menu_gallery, "Gallery"));
+        events.add(new Event(5, R.drawable.ic_menu_manage, "Manage"));
+        events.add(new Event(6, R.drawable.ic_menu_send, "Send"));
+        events.add(new Event(7, R.drawable.ic_menu_share, "Share"));
+        events.add(new Event(8, R.drawable.ic_menu_slideshow, "Slideshow"));
+        gridview.setAdapter(new EventAdapter(this, events));
 
-        final TabLayout.Tab one = tabLayout.newTab();
-        final TabLayout.Tab two = tabLayout.newTab();
-        final TabLayout.Tab three = tabLayout.newTab();
-
-        one.setText("ONE");
-        two.setText("TWO");
-        three.setText("THREE");
-
-        tabLayout.addTab(one, 0);
-        tabLayout.addTab(two, 1);
-        tabLayout.addTab(three, 2);
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        // Create a tab listener that is called when the user changes tabs.
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Toast.makeText(MainActivity.this, "" + position,
+                        Toast.LENGTH_SHORT).show();
             }
         });
-
-        checkPermissions();
-
     }
 
-    private void checkPermissions(){
-        List<String> requiredPermissions = new ArrayList<String>();
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED){
-            requiredPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED){
-            requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-
-        // TODO: Finish this permission stuff
-        if (requiredPermissions.size() > 0){
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Context context = getApplicationContext();
-                CharSequence text = "Permission needs explanation!";
-                int duration = Toast.LENGTH_SHORT;
-                Toast.makeText(context, text, duration).show();
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        requiredPermissions.toArray(new String[requiredPermissions.size()]),
-                        CARKO_PERMISSION_LOCATION);
-            }
-        } else{
-            signInButton.setEnabled(true);
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case CARKO_PERMISSION_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    signInButton.setEnabled(true);
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    signInButton.setEnabled(false);
-                    Context context = getApplicationContext();
-                    CharSequence text = "Grant permissions in user settings.";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast.makeText(context, text, duration).show();
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user clicks the Sign in button */
-    public void signIn(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-    /** Called when the user clicks the Register button */
-    public void register(View view) {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
