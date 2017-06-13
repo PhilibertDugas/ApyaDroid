@@ -1,6 +1,9 @@
 package com.carko.carko;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,8 +41,20 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        GridView gridview = (GridView) findViewById(R.id.eventsGridView);
-        ArrayList<Event> events = new ArrayList<Event>();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
+        recyclerView.setHasFixedSize(true);
+
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
+        recyclerView.setLayoutManager(layoutManager);
+
+        ArrayList<Event> eventList = getEventList();
+        AsymGridRecyclerViewAdapter adapter =
+                new AsymGridRecyclerViewAdapter(MainActivity.this, eventList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private ArrayList<Event> getEventList(){
+        ArrayList<Event> events = new ArrayList<>();
         events.add(new Event(0, R.drawable.pacman, "Orange Pacman"));
         events.add(new Event(1, R.drawable.pacmanjaune, "Yellow Pacman"));
         events.add(new Event(2, R.drawable.ghost, "Ghost"));
@@ -48,15 +64,7 @@ public class MainActivity extends AppCompatActivity
         events.add(new Event(6, R.drawable.ic_menu_send, "Send"));
         events.add(new Event(7, R.drawable.ic_menu_share, "Share"));
         events.add(new Event(8, R.drawable.ic_menu_slideshow, "Slideshow"));
-        gridview.setAdapter(new EventAdapter(this, events));
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(MainActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        return events;
     }
 
     @Override
@@ -91,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

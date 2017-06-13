@@ -45,7 +45,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
                     .inflate(R.layout.event_cell, parent, false);
             viewHolder = new ViewHolder();
             ImageView imageView = (ImageView) convertView.findViewById(R.id.eventImage);
-            imageView.setLayoutParams(new ConstraintLayout.LayoutParams(400,400));
+            imageView.setLayoutParams(new RelativeLayout.LayoutParams(400,400));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(8, 8, 8, 8);
             TextView textView = (TextView) convertView.findViewById(R.id.eventLabel);
