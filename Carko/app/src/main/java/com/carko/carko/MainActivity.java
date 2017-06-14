@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity
         Log.d("MainActivity","onCreate");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -42,8 +43,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
-        recyclerView.setHasFixedSize(true);
-
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -51,6 +50,9 @@ public class MainActivity extends AppCompatActivity
         AsymGridRecyclerViewAdapter adapter =
                 new AsymGridRecyclerViewAdapter(MainActivity.this, eventList);
         recyclerView.setAdapter(adapter);
+
+        EventOffsetDecoration eventDecoration = new EventOffsetDecoration(this, R.dimen.event_offset);
+        recyclerView.addItemDecoration(eventDecoration);
     }
 
     private ArrayList<Event> getEventList(){

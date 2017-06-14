@@ -1,11 +1,13 @@
 package com.carko.carko;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -32,12 +34,14 @@ public class AsymGridRecyclerViewAdapter extends RecyclerView.Adapter<EventViewH
     public void onBindViewHolder(EventViewHolder viewHolder, int position) {
         viewHolder.label.setText(itemList.get(position).getLabel());
         viewHolder.image.setImageResource(itemList.get(position).getDrawable());
-        viewHolder.image.getLayoutParams().height = 400;
+        StaggeredGridLayoutManager.LayoutParams layoutParams =
+                (StaggeredGridLayoutManager.LayoutParams) viewHolder.cardView.getLayoutParams();
         if (position == 0 || position == 1) {
             // Active event and next event are full width
-            StaggeredGridLayoutManager.LayoutParams layoutParams =
-                    (StaggeredGridLayoutManager.LayoutParams) viewHolder.cardView.getLayoutParams();
             layoutParams.setFullSpan(true);
+            layoutParams.height = 600;
+        } else{
+            layoutParams.height = 400;
         }
     }
 

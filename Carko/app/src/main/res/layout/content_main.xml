@@ -12,6 +12,8 @@
         android:id="@+id/eventsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:clipToPadding="false"
+        android:padding="@dimen/event_offset" />
 
 </RelativeLayout>
