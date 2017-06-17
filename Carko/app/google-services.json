@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "721174258185",
+    "firebase_url": "https://carko-1475431423846.firebaseio.com",
+    "project_id": "carko-1475431423846",
+    "storage_bucket": "carko-1475431423846.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721174258185:android:4467280c5c80a07d",
+        "android_client_info": {
+          "package_name": "com.carko.carko"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721174258185-suq4hjvppoel6j2ad7b86r3j6h8en3i2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carko.carko",
+            "certificate_hash": "04bbd8075f697e6ffa5ac9f5bf43c7859afd82ea"
+          }
+        },
+        {
+          "client_id": "721174258185-s9gd9ls9jrmjc2rvr1cid216seaa7kkl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_MxlyP_3ZeQe6o8tQpihbx8kpwfVJcRU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721174258185-s9gd9ls9jrmjc2rvr1cid216seaa7kkl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "721174258185-m1uqeoh3pujven9jrqag935klqint5vb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qh4l.Apya"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,6 +17,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private String TAG = MainActivity.class.getSimpleName();
+    private ArrayList<Event> eventList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,17 +38,33 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<Event> eventList = getEventList();
-        AsymGridRecyclerViewAdapter adapter =
-                new AsymGridRecyclerViewAdapter(MainActivity.this, eventList);
-        recyclerView.setAdapter(adapter);
-
         EventOffsetDecoration eventDecoration = new EventOffsetDecoration(this, R.dimen.event_offset);
         recyclerView.addItemDecoration(eventDecoration);
+
+        eventList = new ArrayList<>();
+        EventAdapter adapter =
+                new EventAdapter(MainActivity.this, eventList);
+        recyclerView.setAdapter(adapter);
+
+        Event.getAllEvents(new EventClient.Complete() {
+            @Override
+            public void onComplete(Object events, Error e) {
+                Log.d(TAG, events.toString());
+                if (e == null) {
+                    // TODO: Put something for when it's empty
+                    ArrayList<Event> moreEvents = (ArrayList<Event>) events;
+                    eventList.addAll(moreEvents);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                } else {
+                    // TODO: Put something to show error
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+        });
     }
 
     private ArrayList<Event> getEventList(){
