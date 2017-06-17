@@ -1,3 +1,0 @@
-1- remove tabs on map view
-2- main view with grid and hamburger menu
-3- no login until trying to park or selecting an item in the hamburger menu
