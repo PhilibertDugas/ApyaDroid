@@ -23,7 +23,8 @@ public class ApiClient extends Application{
     public void onCreate() {
         super.onCreate();
         Uri.Builder uriBuilder = new Uri.Builder();
-        uriBuilder.path("https://integration-apya.herokuapp.com");
+        uriBuilder.scheme("https");
+        uriBuilder.authority("integration-apya.herokuapp.com");
         baseUrl = uriBuilder.build();
         instance = this;
     }

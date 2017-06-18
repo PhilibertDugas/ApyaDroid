@@ -12,6 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -23,12 +28,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MainActivity","onCreate");
         setContentView(R.layout.activity_main);
+
+        // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
+        // Drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -38,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Events view
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
         recyclerView.setLayoutManager(layoutManager);
@@ -46,8 +54,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.addItemDecoration(eventDecoration);
 
         eventList = new ArrayList<>();
-        EventAdapter adapter =
-                new EventAdapter(MainActivity.this, eventList);
+        EventAdapter adapter = new EventAdapter(MainActivity.this, eventList);
         recyclerView.setAdapter(adapter);
 
         Event.getAllEvents(new EventClient.Complete() {
@@ -65,20 +72,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-    }
-
-    private ArrayList<Event> getEventList(){
-        ArrayList<Event> events = new ArrayList<>();
-        events.add(new Event(0, R.drawable.pacman, "Orange Pacman"));
-        events.add(new Event(1, R.drawable.pacmanjaune, "Yellow Pacman"));
-        events.add(new Event(2, R.drawable.ghost, "Ghost"));
-        events.add(new Event(3, R.drawable.ic_menu_camera, "Camera"));
-        events.add(new Event(4, R.drawable.ic_menu_gallery, "Gallery"));
-        events.add(new Event(5, R.drawable.ic_menu_manage, "Manage"));
-        events.add(new Event(6, R.drawable.ic_menu_send, "Send"));
-        events.add(new Event(7, R.drawable.ic_menu_share, "Share"));
-        events.add(new Event(8, R.drawable.ic_menu_slideshow, "Slideshow"));
-        return events;
     }
 
     @Override

@@ -21,6 +21,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 public class ParkingMapFragment extends Fragment
         implements OnMapReadyCallback {
 
+    private final String TAG = ParkingMapFragment.class.getSimpleName();
+
     private View fragmentLayout;
     private View customInfoWindow;
     private MapView mapView;
@@ -33,6 +35,7 @@ public class ParkingMapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         MapboxAccountManager.start(getActivity(), getString(R.string.mapbox_access_token));
 
         fragmentLayout = inflater.inflate(R.layout.fragment_parking_map, container, false);

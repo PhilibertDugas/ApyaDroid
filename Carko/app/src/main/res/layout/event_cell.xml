@@ -14,11 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
-        app:srcCompat="@drawable/pacman"
         android:id="@+id/eventImage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:layout_centerInParent="true" />
         <TextView
             android:id="@+id/eventLabel"
@@ -26,6 +25,11 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/eventImage"
             android:layout_centerHorizontal="true"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:background="@android:color/white"
+            android:alpha="0.7" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

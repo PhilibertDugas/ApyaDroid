@@ -32,6 +32,7 @@ public class EventClient {
         Uri.Builder uriBuilder = baseUrl.buildUpon();
         uriBuilder.appendPath("events");
         Uri eventsUrl = uriBuilder.build();
+        Log.d(TAG, "events url: " + eventsUrl.toString());
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
                 eventsUrl.toString(), null, new Response.Listener<JSONArray>(){
 
@@ -52,7 +53,7 @@ public class EventClient {
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("Error: " + error.getMessage());
+                Log.e(TAG, "Error: " + error.getMessage());
                 complete.onComplete(new ArrayList<Event>(), new Error(error.getMessage()));
             }
         });

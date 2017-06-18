@@ -4,11 +4,21 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,6 +26,8 @@ import java.util.List;
  */
 
 public class EventAdapter extends RecyclerView.Adapter<EventViewHolder> {
+    private static final String TAG = EventAdapter.class.getSimpleName();
+
     private List<Event> itemList;
     private Context context;
 
@@ -31,18 +43,25 @@ public class EventAdapter extends RecyclerView.Adapter<EventViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(EventViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final EventViewHolder viewHolder, int position) {
         Event event = itemList.get(position);
+        viewHolder.setEvent(event);
         viewHolder.label.setText(event.getLabel());
-        viewHolder.image.setImageResource(event.getDrawable());
+
+        // Load image from Firebase
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReferenceFromUrl(event.getPhotoURL());
+        Glide.with(this.context)
+                .using(new FirebaseImageLoader())
+                .load(ref)
+                .into(viewHolder.image);
+
+        // Set layout parameters
         StaggeredGridLayoutManager.LayoutParams layoutParams =
                 (StaggeredGridLayoutManager.LayoutParams) viewHolder.cardView.getLayoutParams();
-        if (position == 0 || position == 1) {
-            // Active event and next event are full width
+        if (position == 0) {
+            // Active event is full width
             layoutParams.setFullSpan(true);
-            layoutParams.height = 450;
-        } else{
-            layoutParams.height = 300;
         }
     }
 

@@ -16,12 +16,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".ApiClient"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".ApiClient">
+        android:theme="@style/AppTheme">
         <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
 
         <activity
@@ -49,6 +49,10 @@
             android:label="@string/locate_parking"
             android:parentActivityName=".ParkingTabActivity" />
         <activity android:name=".AddParkingDetailActivity" />
+        <activity
+            android:name=".EventMapActivity"
+            android:label="@string/title_activity_event_map"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
