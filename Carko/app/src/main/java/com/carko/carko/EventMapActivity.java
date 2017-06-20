@@ -1,5 +1,6 @@
 package com.carko.carko;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.MapboxAccountManager;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -36,6 +38,10 @@ public class EventMapActivity extends AppCompatActivity
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        Intent intent = getIntent();
+        Event event = intent.getParcelableExtra(EventViewHolder.EXTRA_EVENT);
+        Toast.makeText(this, event.getLabel(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

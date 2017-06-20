@@ -1,38 +1,29 @@
 package com.carko.carko;
 
-import android.net.Uri;
-import android.util.Log;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-
 /**
  * Created by fabrice on 2017-06-10.
  */
 
-public class Event {
+public class Event implements Parcelable {
     private final String TAG = Event.class.getSimpleName();
 
     private int id;
     private LatLng latLng;
     private String photoURL;
-    private int drawable;  // TODO: replace this with the photo URL
     private int range;
     private float price;
     private String label;
     private int targetAudience;
     private String startTime;
     private String endTime;
-
-    Event(int id, int drawable, String label){
-        this.id = id;
-        this.drawable = drawable;
-        this.label = label;
-    }
 
     Event(JSONObject obj) throws JSONException{
         this.photoURL = obj.getString("photo_url");
@@ -44,15 +35,10 @@ public class Event {
         this.startTime = obj.getString("start_time");
         this.endTime = obj.getString("end_time");
         this.targetAudience = obj.getInt("target_audience");
-        this.drawable = R.drawable.ghost;
     }
 
     public int getId(){
         return id;
-    }
-
-    public int getDrawable(){
-        return drawable;
     }
 
     public String getLabel(){
@@ -71,4 +57,51 @@ public class Event {
     public static void getAllEvents(EventClient.Complete complete){
         EventClient.getAllEvents(complete);
     }
+
+    /** Parcelable methods **/
+    @Override
+    public int describeContents(){
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags){
+        int[] ints = {this.id, this.range, this.targetAudience};
+        double[] doubles = {this.latLng.getLatitude(), this.latLng.getLongitude()};
+        String[] strings = {this.photoURL, this.label, this.startTime, this.endTime};
+        out.writeIntArray(ints);
+        out.writeDoubleArray(doubles);
+        out.writeStringArray(strings);
+        out.writeFloat(this.price);
+    }
+
+    public static final Parcelable.Creator<Event> CREATOR
+            = new Parcelable.Creator<Event>(){
+        public Event createFromParcel(Parcel in){
+            return new Event(in);
+        }
+
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
+    private Event(Parcel in){
+        int[] ints = new int[3];
+        double[] doubles = new double[2];
+        String[] strings = new String[4];
+        in.readIntArray(ints);
+        in.readDoubleArray(doubles);
+        in.readStringArray(strings);
+        this.price = in.readFloat();
+        this.id = ints[0];
+        this.range = ints[1];
+        this.targetAudience = ints[2];
+        this.latLng = new LatLng(doubles[0], doubles[1]);
+        this.photoURL = strings[0];
+        this.label = strings[1];
+        this.startTime = strings[2];
+        this.endTime = strings[3];
+    }
+    /** End of Parcelable methods **/
 }

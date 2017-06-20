@@ -7,12 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 /**
  * Created by fabrice on 2017-06-11.
@@ -26,6 +20,8 @@ public class EventViewHolder extends RecyclerView.ViewHolder
 
     private Event event;
 
+    public final static String EXTRA_EVENT = "com.carko.carko.extra_event";
+
     EventViewHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
@@ -36,9 +32,9 @@ public class EventViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onClick(View view) {
-//        int pos = this.getAdapterPosition();
         Context context = view.getContext();
         Intent intent = new Intent(context, EventMapActivity.class);
+        intent.putExtra(EventViewHolder.EXTRA_EVENT, this.event);
         context.startActivity(intent);
     }
 
