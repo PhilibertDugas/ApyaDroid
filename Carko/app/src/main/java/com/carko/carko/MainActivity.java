@@ -57,14 +57,13 @@ public class MainActivity extends AppCompatActivity
         EventAdapter adapter = new EventAdapter(MainActivity.this, eventList);
         recyclerView.setAdapter(adapter);
 
-        Event.getAllEvents(new EventClient.Complete() {
+        Event.getAllEvents(new EventClient.Complete<ArrayList<Event>>() {
             @Override
-            public void onComplete(Object events, Error e) {
-                Log.d(TAG, events.toString());
+            public void onComplete(ArrayList<Event> events, Error e) {
+                Log.i(TAG, events.toString());
                 if (e == null) {
                     // TODO: Put something for when it's empty
-                    ArrayList<Event> moreEvents = (ArrayList<Event>) events;
-                    eventList.addAll(moreEvents);
+                    eventList.addAll(events);
                     recyclerView.getAdapter().notifyDataSetChanged();
                 } else {
                     // TODO: Put something to show error

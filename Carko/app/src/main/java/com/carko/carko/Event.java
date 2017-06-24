@@ -16,7 +16,7 @@ public class Event implements Parcelable {
     private final String TAG = Event.class.getSimpleName();
 
     private int id;
-    private LatLng latLng;
+    private LatLng pos;
     private String photoURL;
     private int range;
     private float price;
@@ -29,7 +29,7 @@ public class Event implements Parcelable {
         this.photoURL = obj.getString("photo_url");
         this.id = obj.getInt("id");
         this.label = obj.getString("label");
-        this.latLng = new LatLng(obj.getDouble("latitude"), obj.getDouble("longitude"));
+        this.pos = new LatLng(obj.getDouble("latitude"), obj.getDouble("longitude"));
         this.price = (float) obj.getDouble("price");
         this.range = obj.getInt("range");
         this.startTime = obj.getString("start_time");
@@ -49,6 +49,8 @@ public class Event implements Parcelable {
         return this.photoURL;
     }
 
+    public LatLng getPos() { return this.pos; }
+
     public String toString(){
         String string = "Event " + id + ": " + label;
         return string;
@@ -67,7 +69,7 @@ public class Event implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags){
         int[] ints = {this.id, this.range, this.targetAudience};
-        double[] doubles = {this.latLng.getLatitude(), this.latLng.getLongitude()};
+        double[] doubles = {this.pos.getLatitude(), this.pos.getLongitude()};
         String[] strings = {this.photoURL, this.label, this.startTime, this.endTime};
         out.writeIntArray(ints);
         out.writeDoubleArray(doubles);
@@ -97,7 +99,7 @@ public class Event implements Parcelable {
         this.id = ints[0];
         this.range = ints[1];
         this.targetAudience = ints[2];
-        this.latLng = new LatLng(doubles[0], doubles[1]);
+        this.pos = new LatLng(doubles[0], doubles[1]);
         this.photoURL = strings[0];
         this.label = strings[1];
         this.startTime = strings[2];
