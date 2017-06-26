@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="SlideUpPanel">
-        <attr name="hide" format="boolean" />
+    <declare-styleable name="SlideView">
+        <attr name="hidden" format="boolean" />
+        <attr name="position" format="integer" />
     </declare-styleable>
 </resources>
