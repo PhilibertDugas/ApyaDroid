@@ -6,11 +6,12 @@ import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.FrameLayout
+import android.util.TypedValue
+import android.view.GestureDetector
 
-class SlideView: FrameLayout{
+class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, attrs){
     companion object {
         val POSITION_HINT = 0
         val POSITION_HALF = 1
@@ -22,11 +23,12 @@ class SlideView: FrameLayout{
     private var hidden = false
     private var position = POSITION_HINT
 
-    private var screenHeight: Int? = null
+    private val screenHeight: Int
+    private var minY: Int = 0
+    private val maxY: Int
+    private var downY = 0.0f
 
-    private val mGestureDetector = GestureDetector(context, SlideOnGestureListener())
-
-    constructor(context: Context, attrs: AttributeSet): super(context, attrs) {
+    init {
         Log.i(TAG, "init")
         val a: TypedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.SlideView, 0, 0)
         try {
@@ -35,12 +37,23 @@ class SlideView: FrameLayout{
         } finally {
             a.recycle()
         }
+
+        // Get screen height
         val metrics = DisplayMetrics()
         (getContext() as Activity).windowManager.defaultDisplay.getMetrics(metrics)
         screenHeight = metrics.heightPixels
+        maxY = (0.85f * screenHeight.toFloat()).toInt()
+
+        // Set initial position
         when (this.position) {
-            POSITION_HINT -> this.translationY = screenHeight!!.toFloat()*0.85f
-            POSITION_HALF -> this.translationY = screenHeight!!.toFloat()*0.5f
+            POSITION_HINT -> this.translationY = screenHeight.toFloat() * 0.85f
+            POSITION_HALF -> this.translationY = screenHeight.toFloat() * 0.5f
+        }
+
+        // Set maximum slide y value to be under the Actionbar
+        val tv = TypedValue()
+        if ((getContext() as Activity).theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            minY = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
         }
     }
 
@@ -54,43 +67,66 @@ class SlideView: FrameLayout{
         return !hidden
     }
 
+    private val mGestureDetector = GestureDetector(getContext(),
+            object: GestureDetector.SimpleOnGestureListener() {
+                override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+                    Log.i(TAG, "onFling")
+                    return true
+                }
+    })
+
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        Log.i(TAG, "onTouchEvent")
-        mGestureDetector.onTouchEvent(ev)
+        Log.i(TAG, "onTouchEvent: " + ev.action)
+        if (!mGestureDetector.onTouchEvent(ev)) { // Listen to fling events first
+            when (ev.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    Log.i(TAG, "DOWN y: " + ev.y)
+                    downY = ev.y
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    Log.i(TAG, "MOVE y: " + ev.y)
+                    move(ev.y)
+                }
+            }
+        }
         return true
     }
 
-    private inner class SlideOnGestureListener: GestureDetector.SimpleOnGestureListener() {
-        override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
-            Log.i(TAG, "onScroll")
-            val currY = this@SlideView.y
-            this@SlideView.y = currY - distanceY
-            return super.onScroll(e1, e2, distanceX, distanceY)
-        }
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        Log.i(TAG, "onInterceptTouchEvent")
+        super.onInterceptTouchEvent(ev)
+        return true
+    }
 
-        override fun onDown(e: MotionEvent?): Boolean {
-            Log.i(TAG, "onDown")
-            return super.onDown(e)
+    private fun move(y: Float, dy: Float) {
+        val currY = this@SlideView.y
+        var distanceY = dy - y
+        if (currY + distanceY < minY)  {
+            // Translation would cause the view to overflow
+            distanceY = minY - currY
+        } else if (currY + distanceY >= maxY) {
+            // Translation would cause the view to underflow
+            distanceY = maxY - currY
         }
+        this@SlideView.animate()
+                .yBy(distanceY)
+                .setDuration(0)
+                .start()
+    }
 
-        override fun onDoubleTap(e: MotionEvent?): Boolean {
-            Log.i(TAG, "onDoubleTap")
-            return super.onDoubleTap(e)
+    private fun move(dy: Float){
+        val currY = this@SlideView.y
+        var distanceY = dy - downY
+        if (currY + distanceY < minY)  {
+            // Translation would cause the view to overflow
+            distanceY = minY - currY
+        } else if (currY + distanceY >= maxY) {
+            // Translation would cause the view to underflow
+            distanceY = maxY - currY
         }
-
-        override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-            Log.i(TAG, "onFling")
-            return super.onFling(e1, e2, velocityX, velocityY)
-        }
-
-        override fun onLongPress(e: MotionEvent?) {
-            Log.i(TAG, "onLongPress")
-            super.onLongPress(e)
-        }
-
-        override fun onSingleTapUp(e: MotionEvent?): Boolean {
-            Log.i(TAG, "onSingleTapUp")
-            return super.onSingleTapUp(e)
-        }
+        this@SlideView.animate()
+                .yBy(distanceY)
+                .setDuration(0)
+                .start()
     }
 }

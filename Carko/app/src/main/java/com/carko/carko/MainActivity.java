@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private String TAG = MainActivity.class.getSimpleName();
+    private String TAG = "APYA - " + MainActivity.class.getSimpleName();
     private ArrayList<Event> eventList;
 
     @Override
