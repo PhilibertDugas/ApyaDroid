@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
         Event.getAllEvents(new EventClient.Complete<ArrayList<Event>>() {
             @Override
-            public void onComplete(ArrayList<Event> events, Error e) {
+            public void onComplete(ArrayList<Event> events, String e) {
                 Log.i(TAG, events.toString());
                 if (e == null) {
                     // TODO: Put something for when it's empty
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
                     recyclerView.getAdapter().notifyDataSetChanged();
                 } else {
                     // TODO: Put something to show error
-                    Log.e(TAG, e.getMessage());
+                    Log.e(TAG, e);
                 }
             }
         });

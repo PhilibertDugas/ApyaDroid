@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class EventMapActivity extends AppCompatActivity
     implements OnMapReadyCallback {
 
-    private String TAG = EventMapActivity.class.getSimpleName();
+    private String TAG = "Apya." + EventMapActivity.class.getSimpleName();
 
     private View customInfoWindow;
     private MapView mapView;
@@ -105,12 +105,12 @@ public class EventMapActivity extends AppCompatActivity
 
         // Add event parkings
         EventClient.getEventParkings(event, new EventClient.Complete<ArrayList<Parking>>(){
-            public void onComplete(ArrayList<Parking> response, Error e){
+            public void onComplete(ArrayList<Parking> response, String e){
                 if (e == null) {
-                    Log.i(TAG, response.toString());
+                    Log.i(TAG, "getEventParkings: " + response.toString());
                     EventMapActivity.this.addParkings(response);
                 } else {
-                    Log.e(TAG, e.getMessage());
+                    Log.e(TAG, "getEventParkings: " + e);
                 }
             }
         });
@@ -118,7 +118,7 @@ public class EventMapActivity extends AppCompatActivity
 
     private void addMarker(LatLng pos){
         final MarkerOptions marker = new MarkerOptions().position(pos);
-        Log.i(TAG, pos.toString());
+        Log.i(TAG, "addMarker: " + pos.toString());
         map.addMarker(marker);
     }
 

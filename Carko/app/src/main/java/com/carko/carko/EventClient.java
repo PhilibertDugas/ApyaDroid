@@ -17,7 +17,7 @@ import java.util.ArrayList;
 class EventClient {
 
     interface Complete<T> {
-        void onComplete(T response, Error e);
+        void onComplete(T response, String e);
     }
 
     private static String TAG = EventClient.class.getSimpleName();
@@ -35,13 +35,13 @@ class EventClient {
             public void onResponse(JSONArray response){
                 Log.i(TAG, response.toString());
                 ArrayList<Event> events = new ArrayList<>();
-                Error error = null;
+                String error = null;
                 try {
                     for (int i = 0; i < response.length(); i++) {
                         events.add(new Event((JSONObject) response.get(i)));
                     }
                 } catch (JSONException e) {
-                    error = new Error(e.getMessage());
+                    error = e.getMessage();
                 }
                 complete.onComplete(events, error);
             }
@@ -49,7 +49,7 @@ class EventClient {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Error: " + error.getMessage());
-                complete.onComplete(new ArrayList<Event>(), new Error(error.getMessage()));
+                complete.onComplete(new ArrayList<Event>(), error.getMessage());
             }
         });
         ApiClient.getInstance().addRequest(request);
@@ -70,20 +70,20 @@ class EventClient {
             public void onResponse(JSONArray response){
                 Log.i(TAG, response.toString());
                 ArrayList<Parking> parkings = new ArrayList<>();
-                Error error = null;
+                String error = null;
                 try {
                     for (int i = 0; i < response.length(); i++) {
                         parkings.add(new Parking((JSONObject) response.get(i)));
                     }
                 } catch (JSONException e) {
-                    error = new Error(e.getMessage());
+                    error = e.getMessage();
                 }
                 complete.onComplete(parkings, error);
             }
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-                complete.onComplete(new ArrayList<Event>(), new Error(error.getMessage()));
+                complete.onComplete(new ArrayList<Event>(), error.getMessage());
             }
         });
         ApiClient.getInstance().addRequest(request);
