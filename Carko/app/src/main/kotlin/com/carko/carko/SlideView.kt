@@ -69,8 +69,27 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
 
     private val mGestureDetector = GestureDetector(getContext(),
             object: GestureDetector.SimpleOnGestureListener() {
-                override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-                    Log.i(TAG, "onFling")
+                override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                    val half = 0.5f*maxY
+                    val bottomHalf = this@SlideView.y < half
+                    val goingUp = velocityY < 0
+                    val destination: Float
+                    if (bottomHalf) {
+                        if (goingUp) {
+                            destination = half
+                        } else {
+                            destination = minY.toFloat()
+                        }
+                    } else {
+                        if (goingUp) {
+                            destination = maxY.toFloat()
+                        } else {
+                            destination = half
+                        }
+                    }
+                    val distance = Math.abs(destination-this@SlideView.y)
+                    val duration = (distance / Math.abs(velocityY) * 1000).toLong()
+                    moveTo(destination, duration)
                     return true
                 }
     })
@@ -85,7 +104,7 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
                 }
                 MotionEvent.ACTION_MOVE -> {
                     Log.i(TAG, "MOVE y: " + ev.y)
-                    move(ev.y)
+                    moveBy(ev.y)
                 }
             }
         }
@@ -114,7 +133,7 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
                 .start()
     }
 
-    private fun move(dy: Float){
+    private fun moveBy(dy: Float) {
         val currY = this@SlideView.y
         var distanceY = dy - downY
         if (currY + distanceY < minY)  {
@@ -127,6 +146,13 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
         this@SlideView.animate()
                 .yBy(distanceY)
                 .setDuration(0)
+                .start()
+    }
+
+    private fun moveTo(y: Float, duration: Long = 500) {
+        this@SlideView.animate()
+                .y(y)
+                .setDuration(duration)
                 .start()
     }
 }
