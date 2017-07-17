@@ -9,31 +9,33 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.util.TypedValue
-import android.view.GestureDetector
 
 class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, attrs){
     companion object {
-        val POSITION_HINT = 0
-        val POSITION_HALF = 1
-        val POSITION_FULL = 2
-
         val TAG = "APYA - " + SlideView::class.java.getSimpleName()
     }
 
+    enum class Position { HINT, HALF, FULL }
+    enum class Direction { UP, DOWN }
+
     private var hidden = false
-    private var position = POSITION_HINT
+    private var position = Position.HINT
 
     private val screenHeight: Int
-    private var minY: Int = 0
+    private var minY: Int
     private val maxY: Int
+
     private var downY = 0.0f
+    private var lastY = 0.0f
+    private lateinit var lastDirection: Direction
 
     init {
         Log.i(TAG, "init")
         val a: TypedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.SlideView, 0, 0)
         try {
             this.hidden = a.getBoolean(R.styleable.SlideView_hidden, false)
-            this.position = a.getInteger(R.styleable.SlideView_position, POSITION_HINT)
+            val posInt = a.getInteger(R.styleable.SlideView_position, Position.HINT.ordinal)
+            this.position = Position.values()[posInt]
         } finally {
             a.recycle()
         }
@@ -46,15 +48,15 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
 
         // Set initial position
         when (this.position) {
-            POSITION_HINT -> this.translationY = screenHeight.toFloat() * 0.85f
-            POSITION_HALF -> this.translationY = screenHeight.toFloat() * 0.5f
+            Position.HINT -> this.translationY = screenHeight.toFloat() * 0.85f
+            Position.HALF -> this.translationY = screenHeight.toFloat() * 0.5f
+            Position.FULL -> this.translationY = 0.0f
         }
 
         // Set maximum slide y value to be under the Actionbar
         val tv = TypedValue()
-        if ((getContext() as Activity).theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            minY = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
-        }
+        (getContext() as Activity).theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)
+        minY = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
     }
 
     fun hide() {
@@ -67,70 +69,55 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
         return !hidden
     }
 
-    private val mGestureDetector = GestureDetector(getContext(),
-            object: GestureDetector.SimpleOnGestureListener() {
-                override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                    val half = 0.5f*maxY
-                    val bottomHalf = this@SlideView.y < half
-                    val goingUp = velocityY < 0
-                    val destination: Float
-                    if (bottomHalf) {
-                        if (goingUp) {
-                            destination = half
-                        } else {
-                            destination = minY.toFloat()
-                        }
-                    } else {
-                        if (goingUp) {
-                            destination = maxY.toFloat()
-                        } else {
-                            destination = half
-                        }
-                    }
-                    val distance = Math.abs(destination-this@SlideView.y)
-                    val duration = (distance / Math.abs(velocityY) * 1000).toLong()
-                    moveTo(destination, duration)
-                    return true
-                }
-    })
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        Log.i(TAG, "onInterceptTouchEvent")
+        return true
+    }
 
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        Log.i(TAG, "onTouchEvent: " + ev.action)
-        if (!mGestureDetector.onTouchEvent(ev)) { // Listen to fling events first
-            when (ev.actionMasked) {
-                MotionEvent.ACTION_DOWN -> {
-                    Log.i(TAG, "DOWN y: " + ev.y)
-                    downY = ev.y
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    Log.i(TAG, "MOVE y: " + ev.y)
-                    moveBy(ev.y)
-                }
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                Log.i(TAG, "DOWN y: " + event.y)
+                downY = event.y
+            }
+            MotionEvent.ACTION_MOVE -> {
+                lastDirection = if (event.rawY < lastY) Direction.UP else Direction.DOWN
+                Log.i(TAG, "MOVE y: " + event.rawY + " " + lastDirection)
+                moveBy(event.y)
+                lastY = event.rawY
+            }
+            MotionEvent.ACTION_UP -> {
+                Log.i(TAG, "UP y: " + event.y)
+                onUp()
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                Log.i(TAG, "Cancel")
             }
         }
         return true
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        Log.i(TAG, "onInterceptTouchEvent")
-        super.onInterceptTouchEvent(ev)
-        return true
-    }
-
-    private fun move(y: Float, dy: Float) {
-        val currY = this@SlideView.y
-        var distanceY = dy - y
-        if (currY + distanceY < minY)  {
-            // Translation would cause the view to overflow
-            distanceY = minY - currY
-        } else if (currY + distanceY >= maxY) {
-            // Translation would cause the view to underflow
-            distanceY = maxY - currY
+    private fun onUp() {
+        val half = 0.5f*maxY
+        val bottomHalf = this@SlideView.y > half
+        val destination: Float
+        Log.i(TAG, bottomHalf.toString() + " " + lastDirection.toString())
+        if (bottomHalf) {
+            if (lastDirection == Direction.UP) {
+                destination = half
+            } else {
+                destination = maxY.toFloat()
+            }
+        } else {
+            if (lastDirection == Direction.UP) {
+                destination = minY.toFloat()
+            } else {
+                destination = half
+            }
         }
-        this@SlideView.animate()
-                .yBy(distanceY)
-                .setDuration(0)
-                .start()
+        if (destination != this@SlideView.y) {
+            moveTo(destination)
+        }
     }
 
     private fun moveBy(dy: Float) {
@@ -155,4 +142,57 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
                 .setDuration(duration)
                 .start()
     }
+
+//    private fun flingTo(startingVelocity: Float, destination: Float) {
+//        val fling = FlingAnimation(view, DynamicAnimation.SCROLL_X)
+//        fling.setStartVelocity(-velocityX)
+//                .setMinValue(0)
+//                .setMaxValue(maxScroll)
+//                .setFriction(1.1f)
+//                .start()
+//    }
+
+//    private inner class FlingGestureListener: GestureDetector.OnGestureListener {
+//        override fun onDown(e: MotionEvent): Boolean  {
+//            return true
+//        }
+//
+//        override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
+//            val half = 0.5f*maxY
+//            val bottomHalf = this@SlideView.y > half
+//            val goingUp = e1.y > e2.y
+////            val destination: Float
+////            if (bottomHalf) {
+////                if (goingUp) {
+////                    destination = half
+////                } else {
+////                    destination = minY.toFloat()
+////                }
+////            } else {
+////                if (goingUp) {
+////                    destination = maxY.toFloat()
+////                } else {
+////                    destination = half
+////                }
+////            }
+////            moveTo(destination)
+//            Log.i(TAG, "onFling: " + e1.toString() + e2.toString())
+//            return true
+//        }
+//
+//        override fun onLongPress(p0: MotionEvent?) {
+//        }
+//
+//        override fun onScroll(e1: MotionEvent, e2: MotionEvent, p2: Float, p3: Float): Boolean {
+//            return true
+//        }
+//
+//        override fun onShowPress(p0: MotionEvent?) {
+//        }
+//
+//        override fun onSingleTapUp(p0: MotionEvent?): Boolean {
+//            return true
+//        }
+//    }
+
 }

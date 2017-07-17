@@ -58,7 +58,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carko.carko.MainActivity" />
         </activity>
-        <activity android:name="KotlinActivity"></activity>
     </application>
 
 </manifest>
