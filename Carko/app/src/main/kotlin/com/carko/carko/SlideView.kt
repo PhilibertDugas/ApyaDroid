@@ -18,7 +18,6 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
     enum class Position { HINT, HALF, FULL }
     enum class Direction { UP, DOWN }
 
-    private var hidden = false
     private var position = Position.HINT
 
     private val screenHeight: Int
@@ -33,7 +32,6 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
         Log.i(TAG, "init")
         val a: TypedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.SlideView, 0, 0)
         try {
-            this.hidden = a.getBoolean(R.styleable.SlideView_hidden, false)
             val posInt = a.getInteger(R.styleable.SlideView_position, Position.HINT.ordinal)
             this.position = Position.values()[posInt]
         } finally {
@@ -57,16 +55,6 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
         val tv = TypedValue()
         (getContext() as Activity).theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)
         minY = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
-    }
-
-    fun hide() {
-        hidden = true
-        invalidate()
-        requestLayout()
-    }
-
-    fun isVisible(): Boolean {
-        return !hidden
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {

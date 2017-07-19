@@ -52,6 +52,12 @@
     <string name="profit_label">Profit</string>
     <string name="detail_edit_save_button">Save</string>
 
+    <!-- Parking description -->
+    <string name="fragment_parking_desc_more_photos">More photos</string>
+    <string name="fragment_parking_desc_availability">Availability</string>
+    <string name="fragment_parking_desc_until">Until:</string>
+    <string name="fragment_parking_desc_description">Description</string>
+
     <!-- Marker info -->
     <string name="marker_info_tap">Tap to continue…</string>
     <string name="title_activity_parking_detail">ParkingDetailActivity</string>
