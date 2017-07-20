@@ -1,14 +1,7 @@
 package com.carko.carko;
 
-import android.net.Uri;
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONObject;
-
-import com.mapbox.mapboxsdk.geometry.LatLng;
-
 import java.util.ArrayList;
 
 class Parking {

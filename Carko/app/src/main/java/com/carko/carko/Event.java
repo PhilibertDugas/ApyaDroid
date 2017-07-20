@@ -3,7 +3,9 @@ package com.carko.carko;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mapbox.mapboxsdk.geometry.LatLng;
+//import com.mapbox.mapboxsdk.geometry.LatLng;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +62,6 @@ public class Event implements Parcelable {
         EventClient.getAllEvents(complete);
     }
 
-    /** Parcelable methods **/
     @Override
     public int describeContents(){
         return 0;
@@ -69,7 +70,7 @@ public class Event implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags){
         int[] ints = {this.id, this.range, this.targetAudience};
-        double[] doubles = {this.pos.getLatitude(), this.pos.getLongitude()};
+        double[] doubles = {this.pos.latitude, this.pos.longitude};
         String[] strings = {this.photoURL, this.label, this.startTime, this.endTime};
         out.writeIntArray(ints);
         out.writeDoubleArray(doubles);
@@ -105,5 +106,4 @@ public class Event implements Parcelable {
         this.startTime = strings[2];
         this.endTime = strings[3];
     }
-    /** End of Parcelable methods **/
 }

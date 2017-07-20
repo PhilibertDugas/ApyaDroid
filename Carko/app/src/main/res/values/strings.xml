@@ -1,11 +1,8 @@
 <resources>
-    <string name="app_name">Carko</string>
+    <string name="app_name">Apya</string>
 
     <!-- Main activity -->
-    <string name="title_activity_main">Carko</string>
-    <string name="login_button">Log in</string>
-    <string name="register_button">Register</string>
-    <string name="tab1_text">Fun. Sex. Lots\'a money.</string>
+    <string name="title_activity_main">Apya</string>
 
     <!-- Drawer menu -->
     <string name="menu_item_payment">Payment</string>
@@ -16,19 +13,17 @@
     <string name="menu_item_rent">Rent your space</string>
     <string name="menu_item_payout">Payout</string>
 
-    <!-- Login -->
-    <string name="title_activity_login">Sign in</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
+    <!-- Event Map Activity -->
+    <string name="title_activity_event_map">EventMapActivity</string>
+    <string name="permission_rationale">Location permissions are needed for locating nearby
+        parkings.
     </string>
+    <string name="permission_denied_explanation">
+        Permissions are required for this app to work.
+        You can set them in the app\'s settings later.
+    </string>
+    <string name="ask_again">Ask again</string>
+    <string name="settings">Settings</string>
 
     <!-- Action bar -->
     <string name="action_settings">Settings</string>
@@ -40,18 +35,6 @@
     <string name="parking_availability_tag">Availability:</string>
     <string name="dummy_parking_availability_time">days</string>
 
-    <!-- Parking detail -->
-    <string name="detail_view_fragment_title">Parking</string>
-    <string name="detail_edit_fragment_title">Parking</string>
-    <string name="address_label">Address</string>
-    <string name="address_hint">Your address</string>
-    <string name="description_label">Description</string>
-    <string name="description_hint">Write a short description...</string>
-    <string name="availability_label">Availability</string>
-    <string name="rates_label">Rates</string>
-    <string name="profit_label">Profit</string>
-    <string name="detail_edit_save_button">Save</string>
-
     <!-- Parking description -->
     <string name="fragment_parking_desc_more_photos">More photos</string>
     <string name="fragment_parking_desc_availability">Availability</string>
@@ -62,14 +45,9 @@
     <string name="marker_info_tap">Tap to continue…</string>
     <string name="title_activity_parking_detail">ParkingDetailActivity</string>
 
-    <!-- Geocoding Activity -->
-    <string name="geocoding_hint">Search location</string>
-    <string name="locate_parking">Locate your parking</string>
-
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_event_map">EventMapActivity</string>
 
 </resources>

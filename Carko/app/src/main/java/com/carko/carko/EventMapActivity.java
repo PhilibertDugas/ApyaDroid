@@ -1,9 +1,14 @@
 package com.carko.carko;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,35 +16,34 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.MapboxAccountManager;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
 public class EventMapActivity extends AppCompatActivity
-    implements OnMapReadyCallback {
+        implements OnMapReadyCallback,
+        GoogleMap.OnMapClickListener,
+        GoogleMap.OnMarkerClickListener {
 
-    private String TAG = "Apya." + EventMapActivity.class.getSimpleName();
+    private String TAG = "APYA - " + EventMapActivity.class.getSimpleName();
+    private int PERMISSIONS_REQUEST_CODE = 111;
 
     private View customInfoWindow;
-    private MapView mapView;
-    private MapboxMap map;
+    private View container;
+    private SlideView slideView;
     private Event event;
+
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Configure MapBox
-        MapboxAccountManager.start(this, getString(R.string.mapbox_access_token));
-
-        // Contains the mapView and needs to be called after MapBox has been configured
         setContentView(R.layout.activity_event_map);
 
         // Toolbar
@@ -51,11 +55,10 @@ public class EventMapActivity extends AppCompatActivity
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
-        // Initialize map
         customInfoWindow = getLayoutInflater().inflate(R.layout.content_marker_info, null);
-        mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        container = findViewById(R.id.event_map_container);
+        slideView = (SlideView) findViewById(R.id.slide_view);
+        requestPermissions();
 
         // Get event
         Intent intent = getIntent();
@@ -63,49 +66,19 @@ public class EventMapActivity extends AppCompatActivity
         Toast.makeText(this, event.getLabel(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
+    private void loadMapAsync() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onMapReady(MapboxMap mMap) {
-        map = mMap;
-        map.setInfoWindowAdapter(new ParkingInfoWindowAdapter(customInfoWindow));
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(event.getPos())
-                .zoom(14)
-                .build();
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1000, null);
-
-        // Add event parkings
-        EventClient.getEventParkings(event, new EventClient.Complete<ArrayList<Parking>>(){
-            public void onComplete(ArrayList<Parking> response, String e){
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPos(), 14.0f));
+        EventClient.getEventParkings(event, new EventClient.Complete<ArrayList<Parking>>() {
+            @Override
+            public void onComplete(ArrayList<Parking> response, String e) {
                 if (e == null) {
                     Log.i(TAG, "getEventParkings: " + response.toString());
                     EventMapActivity.this.addParkings(response);
@@ -114,17 +87,103 @@ public class EventMapActivity extends AppCompatActivity
                 }
             }
         });
+        mMap.setInfoWindowAdapter(new ParkingInfoWindowAdapter(this));
+        mMap.setOnMapClickListener(this);
+        mMap.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public void onMapClick(LatLng pos) {
+        Log.i(TAG, "onMapClick");
+        slideView.setVisibility(View.INVISIBLE);
+        slideView.invalidate();
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Log.i(TAG, "onmarkerClick");
+        slideView.setVisibility(View.VISIBLE);
+        slideView.invalidate();
+        return false;
     }
 
     private void addMarker(LatLng pos){
         final MarkerOptions marker = new MarkerOptions().position(pos);
         Log.i(TAG, "addMarker: " + pos.toString());
-        map.addMarker(marker);
+        mMap.addMarker(marker);
     }
 
     private void addParkings(ArrayList<Parking> parkings) {
         for (Parking parking : parkings) {
             addMarker(parking.getLatLng());
+        }
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_CODE);
+    }
+
+    private void showLinkToSettingsSnackbar() {
+        if (container == null) {
+            return;
+        }
+        Snackbar.make(container,
+                R.string.permission_denied_explanation,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.settings, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Build intent that displays the App settings screen.
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package",
+                                BuildConfig.APPLICATION_ID, null);
+                        intent.setData(uri);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }).show();
+    }
+
+    private void showRequestPermissionsSnackbar() {
+        if (container == null) {
+            return;
+        }
+        Snackbar.make(container, R.string.permission_rationale,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.ask_again, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request permission.
+                        ActivityCompat.requestPermissions(EventMapActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                PERMISSIONS_REQUEST_CODE);
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != PERMISSIONS_REQUEST_CODE) {
+            return;
+        }
+
+        for (int i=0; i<permissions.length; i++) {
+            String permission = permissions[i];
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                if (shouldShowRequestPermissionRationale(permission)) {
+                    Log.i(TAG, "Permission denied without 'NEVER ASK AGAIN': " + permission);
+                    showRequestPermissionsSnackbar();
+                } else {
+                    Log.i(TAG, "Permission denied with 'NEVER ASK AGAIN': " + permission);
+                    showLinkToSettingsSnackbar();
+                }
+            } else {
+                Log.i(TAG, "Permission granted");
+                loadMapAsync();
+            }
         }
     }
 }

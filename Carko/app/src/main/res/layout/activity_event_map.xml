@@ -4,11 +4,17 @@
     xmlns:slide="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.carko.carko.EventMapActivity">
+    tools:context="com.carko.carko.EventMapActivity"
+    android:id="@+id/event_map_container">
 
-    <include layout="@layout/mapbox_mapview"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        tools:context="com.carko.carko.EventMapActivity" />
 
     <include
         layout="@layout/app_bar_main"
@@ -18,7 +24,8 @@
     <com.carko.carko.SlideView
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:visibility="visible">
+        android:visibility="invisible"
+        android:id="@+id/slide_view">
 
         <include layout="@layout/fragment_parking_desc"/>
 
