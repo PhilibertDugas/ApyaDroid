@@ -105,17 +105,22 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_payment) {
-
+            // open stripe view
+            // philibert
         } else if (id == R.id.nav_vehicule) {
-
+            // open custom activity
+            // mario
         } else if (id == R.id.nav_history) {
-
+            // open custom activity
+            //
         } else if (id == R.id.nav_help) {
-
+            // open mail
+            //
         } else if (id == R.id.nav_rent) {
-
+            // open custom activity
+            // rough
         } else if (id == R.id.nav_payout) {
-
+            // open custom activity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
