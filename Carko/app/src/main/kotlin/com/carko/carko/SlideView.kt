@@ -87,7 +87,7 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
 
     private fun onUp() {
         val half = 0.5f*maxY
-        val bottomHalf = this@SlideView.y > half
+        val bottomHalf = this.y > half
         val destination: Float
         Log.i(TAG, bottomHalf.toString() + " " + lastDirection.toString())
         if (bottomHalf) {
@@ -103,13 +103,13 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
                 destination = half
             }
         }
-        if (destination != this@SlideView.y) {
+        if (destination != this.y) {
             moveTo(destination)
         }
     }
 
     private fun moveBy(dy: Float) {
-        val currY = this@SlideView.y
+        val currY = this.y
         var distanceY = dy - downY
         if (currY + distanceY < minY)  {
             // Translation would cause the view to overflow
@@ -118,14 +118,14 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
             // Translation would cause the view to underflow
             distanceY = maxY - currY
         }
-        this@SlideView.animate()
+        this.animate()
                 .yBy(distanceY)
                 .setDuration(0)
                 .start()
     }
 
-    private fun moveTo(y: Float, duration: Long = 500) {
-        this@SlideView.animate()
+    private fun moveTo(y: Float, duration: Long = 200) {
+        this.animate()
                 .y(y)
                 .setDuration(duration)
                 .start()

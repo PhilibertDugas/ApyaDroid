@@ -53,6 +53,8 @@ public class Event implements Parcelable {
 
     public LatLng getPos() { return this.pos; }
 
+    public int getRange() { return this.range; }
+
     public String toString(){
         String string = "Event " + id + ": " + label;
         return string;

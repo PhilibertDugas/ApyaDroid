@@ -3,6 +3,7 @@ package com.carko.carko;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -87,7 +89,11 @@ public class EventMapActivity extends AppCompatActivity
                 }
             }
         });
-        mMap.setInfoWindowAdapter(new ParkingInfoWindowAdapter(this));
+        mMap.addCircle(new CircleOptions()
+            .center(event.getPos())
+            .radius(event.getRange())
+            .strokeColor(Color.TRANSPARENT)
+            .fillColor(0x55ff0000));
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
