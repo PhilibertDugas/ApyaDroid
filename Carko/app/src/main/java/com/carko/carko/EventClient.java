@@ -20,7 +20,7 @@ class EventClient {
         void onComplete(T response, String e);
     }
 
-    private static String TAG = EventClient.class.getSimpleName();
+    private static String TAG = "APYA - " + EventClient.class.getSimpleName();
 
     static void getAllEvents(final Complete complete) {
         Uri baseUrl = ApiClient.getInstance().getBaseUrl();
@@ -48,8 +48,8 @@ class EventClient {
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
-                complete.onComplete(new ArrayList<Event>(), error.getMessage());
+                Log.e(TAG, "Error: " + error.toString());
+                complete.onComplete(new ArrayList<Event>(), error.toString());
             }
         });
         ApiClient.getInstance().addRequest(request);

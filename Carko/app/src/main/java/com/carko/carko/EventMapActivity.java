@@ -1,6 +1,8 @@
 package com.carko.carko;
 
 import android.Manifest;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -36,7 +38,6 @@ public class EventMapActivity extends AppCompatActivity
     private String TAG = "APYA - " + EventMapActivity.class.getSimpleName();
     private int PERMISSIONS_REQUEST_CODE = 111;
 
-    private View customInfoWindow;
     private View container;
     private SlideView slideView;
     private Event event;
@@ -57,15 +58,15 @@ public class EventMapActivity extends AppCompatActivity
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
-        customInfoWindow = getLayoutInflater().inflate(R.layout.content_marker_info, null);
         container = findViewById(R.id.event_map_container);
         slideView = (SlideView) findViewById(R.id.slide_view);
-        requestPermissions();
 
         // Get event
         Intent intent = getIntent();
         event = intent.getParcelableExtra(EventViewHolder.EXTRA_EVENT);
         Toast.makeText(this, event.getLabel(), Toast.LENGTH_SHORT).show();
+
+        loadMapAsync();
     }
 
     private void loadMapAsync() {
@@ -76,7 +77,9 @@ public class EventMapActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.i(TAG, "onMapReady");
         mMap = googleMap;
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(event.getPos()));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPos(), 14.0f));
         EventClient.getEventParkings(event, new EventClient.Complete<ArrayList<Parking>>() {
             @Override
@@ -107,24 +110,36 @@ public class EventMapActivity extends AppCompatActivity
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.i(TAG, "onmarkerClick");
+        Log.i(TAG, "onMarkerClick");
+        Parking parking = (Parking) marker.getTag();
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        ParkingDescFragment fragment = new ParkingDescFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ParkingDescFragment.Companion.getEVENT_KEY(), event);
+        bundle.putParcelable(ParkingDescFragment.Companion.getPARKING_KEY(), parking);
+        fragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.card_view, fragment);
+        fragmentTransaction.commit();
+
         slideView.setVisibility(View.VISIBLE);
         slideView.invalidate();
         return false;
     }
 
-    private void addMarker(LatLng pos){
-        final MarkerOptions marker = new MarkerOptions().position(pos);
-        Log.i(TAG, "addMarker: " + pos.toString());
-        mMap.addMarker(marker);
-    }
-
     private void addParkings(ArrayList<Parking> parkings) {
         for (Parking parking : parkings) {
-            addMarker(parking.getLatLng());
+            LatLng pos = parking.getLatLng();
+            MarkerOptions markerOptions = new MarkerOptions().position(pos);
+            Log.i(TAG, "addMarker: " + pos.toString());
+            Marker marker = mMap.addMarker(markerOptions);
+            marker.setTag(parking);
         }
     }
 
+
+    /* FIXME Permissions are not required right now but might be later */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_CODE);

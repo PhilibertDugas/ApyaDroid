@@ -11,11 +11,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -25,8 +28,11 @@ public class MainActivity extends AppCompatActivity
     private String TAG = "APYA - " + MainActivity.class.getSimpleName();
     private ArrayList<Event> eventList;
 
+    private RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // TODO: Cache events onPause and use them instead of calling API again
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -42,11 +48,12 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        // Navigation view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Events view
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -62,9 +69,13 @@ public class MainActivity extends AppCompatActivity
             public void onComplete(ArrayList<Event> events, String e) {
                 Log.i(TAG, events.toString());
                 if (e == null) {
-                    // TODO: Put something for when it's empty
-                    eventList.addAll(events);
-                    recyclerView.getAdapter().notifyDataSetChanged();
+                    if (events.isEmpty()) {
+                        // TODO: Put something for when it's empty
+                        Log.e(TAG, "No events found.");
+                    } else {
+                        eventList.addAll(events);
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }
                 } else {
                     // TODO: Put something to show error
                     Log.e(TAG, e);

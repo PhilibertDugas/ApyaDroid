@@ -22,29 +22,36 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/event_name"
                 android:text="Event Name"
                 android:textColor="@android:color/white"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/address"
                 android:text="Adresse"
                 android:textColor="@android:color/white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/city"
                 android:text="Ville"
                 android:textColor="@android:color/white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/rating"
                 android:text="Rating"
                 android:textColor="@android:color/white"/>
         </LinearLayout>
-        <ImageView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ghost"/>
+            android:id="@+id/reserve_button"
+            android:text="@string/reserve_now"
+            android:background="@drawable/round_corner_button"
+            android:padding="8dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,12 +63,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:id="@+id/photo1"
             android:src="@drawable/ghost"/>
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:id="@+id/photo2"
             android:src="@drawable/ghost"/>
 
     </LinearLayout>
@@ -123,10 +132,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/description"
         android:textColor="@android:color/white"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."/>
+        android:paddingEnd="8dp" />
 
 </LinearLayout>

@@ -59,7 +59,7 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         Log.i(TAG, "onInterceptTouchEvent")
-        return true
+        return false
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -130,57 +130,5 @@ class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, att
                 .setDuration(duration)
                 .start()
     }
-
-//    private fun flingTo(startingVelocity: Float, destination: Float) {
-//        val fling = FlingAnimation(view, DynamicAnimation.SCROLL_X)
-//        fling.setStartVelocity(-velocityX)
-//                .setMinValue(0)
-//                .setMaxValue(maxScroll)
-//                .setFriction(1.1f)
-//                .start()
-//    }
-
-//    private inner class FlingGestureListener: GestureDetector.OnGestureListener {
-//        override fun onDown(e: MotionEvent): Boolean  {
-//            return true
-//        }
-//
-//        override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
-//            val half = 0.5f*maxY
-//            val bottomHalf = this@SlideView.y > half
-//            val goingUp = e1.y > e2.y
-////            val destination: Float
-////            if (bottomHalf) {
-////                if (goingUp) {
-////                    destination = half
-////                } else {
-////                    destination = minY.toFloat()
-////                }
-////            } else {
-////                if (goingUp) {
-////                    destination = maxY.toFloat()
-////                } else {
-////                    destination = half
-////                }
-////            }
-////            moveTo(destination)
-//            Log.i(TAG, "onFling: " + e1.toString() + e2.toString())
-//            return true
-//        }
-//
-//        override fun onLongPress(p0: MotionEvent?) {
-//        }
-//
-//        override fun onScroll(e1: MotionEvent, e2: MotionEvent, p2: Float, p3: Float): Boolean {
-//            return true
-//        }
-//
-//        override fun onShowPress(p0: MotionEvent?) {
-//        }
-//
-//        override fun onSingleTapUp(p0: MotionEvent?): Boolean {
-//            return true
-//        }
-//    }
 
 }

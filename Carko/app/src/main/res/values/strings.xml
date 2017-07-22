@@ -24,6 +24,7 @@
     </string>
     <string name="ask_again">Ask again</string>
     <string name="settings">Settings</string>
+    <string name="reserve_now">Reserve Now</string>
 
     <!-- Action bar -->
     <string name="action_settings">Settings</string>

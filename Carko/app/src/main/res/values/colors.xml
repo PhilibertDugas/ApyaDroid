@@ -5,6 +5,7 @@
     <color name="colorPrimaryTransparent">#c8000000</color>
     <color name="colorPrimaryDark">#474747</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorSecondary">#FF4081</color>
 
     <color name="colorHint">#808080</color>
 
