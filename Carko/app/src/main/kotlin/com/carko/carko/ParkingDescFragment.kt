@@ -6,9 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.Target
 import com.firebase.ui.storage.images.FirebaseImageLoader
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.android.synthetic.main.fragment_parking_desc.*
 
 import kotlinx.android.synthetic.main.fragment_parking_desc.view.*
 
@@ -31,14 +40,15 @@ class ParkingDescFragment: Fragment() {
         val reserveText = getString(R.string.reserve_now) + "\n" + parking.price.toString()
         layout.reserve_button.text = reserveText
 
-        // Load image from Firebase
         if (parking.photoUrl != "") {
             Log.i(TAG, "Loading " + parking.photoUrl)
             val ref = FirebaseStorage.getInstance()
                     .getReferenceFromUrl(parking.photoUrl)
-            Glide.with(this.context)
+            Glide.with(this)
                     .using(FirebaseImageLoader())
                     .load(ref)
+                    .bitmapTransform(CenterCrop(context), RoundedCornersTransformation(context, 16, 0))
+                    .listener(FirebaseRequestListener(layout.photo1, layout.progress1))
                     .into(layout.photo1)
         } else {
             Log.i(TAG, "No available pictures for photo1")
@@ -48,9 +58,11 @@ class ParkingDescFragment: Fragment() {
             Log.i(TAG, "Loading " + parking.photoUrls[0])
             val ref = FirebaseStorage.getInstance()
                     .getReferenceFromUrl(parking.photoUrls[0])
-            Glide.with(this.context)
+            Glide.with(this)
                     .using(FirebaseImageLoader())
                     .load(ref)
+                    .bitmapTransform(CenterCrop(context), RoundedCornersTransformation(context, 16, 0))
+                    .listener(FirebaseRequestListener(layout.photo2, layout.progress2))
                     .into(layout.photo2)
         } else {
             Log.i(TAG, "No available pictures for photo2")
@@ -58,4 +70,32 @@ class ParkingDescFragment: Fragment() {
 
         return layout
     }
+
+    private class FirebaseRequestListener(private val imageView: ImageView,
+                                          private val progressBar: ProgressBar):
+            RequestListener<StorageReference, GlideDrawable> {
+        override fun onException(e: Exception, model: StorageReference,
+                                 target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
+            progressBar.visibility = View.GONE
+            return true
+        }
+
+        override fun onResourceReady(resource: GlideDrawable, model: StorageReference,
+                                     target: Target<GlideDrawable>, isFromMemoryCache: Boolean,
+                                     isFirstResource: Boolean): Boolean {
+            progressBar.visibility = View.GONE
+            imageView.setImageDrawable(resource)
+            return true
+        }
+    }
+
+//    private fun createTarget(image: ImageView, progress: ProgressBar): SimpleTarget<GlideDrawable> {
+//        return object: SimpleTarget<GlideDrawable>() {
+//            override fun onResourceReady(resource: GlideDrawable, glideAnimation: GlideAnimation<in GlideDrawable>) {
+//                image.setImageDrawable(resource)
+//                progress.visibility = View.GONE
+//                image.visibility = View.VISIBLE
+//            }
+//        }
+//    }
 }

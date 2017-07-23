@@ -56,22 +56,43 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin">
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center">
 
-        <ImageView
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_marginEnd="6dp" >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/photo1"/>
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:id="@+id/progress1"/>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:id="@+id/photo1"
-            android:src="@drawable/ghost"/>
+            android:layout_marginStart="6dp">
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/photo2"
-            android:src="@drawable/ghost"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/photo2" />
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:id="@+id/progress2"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -88,6 +109,7 @@
         android:layout_height="wrap_content"
         android:text="@string/fragment_parking_desc_availability"
         android:textColor="@android:color/white"
+        android:textStyle="bold"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:paddingStart="8dp"/>
 
@@ -122,6 +144,7 @@
         android:layout_height="wrap_content"
         android:text="@string/fragment_parking_desc_description"
         android:textColor="@android:color/white"
+        android:textStyle="bold"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"/>
@@ -134,6 +157,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/description"
         android:textColor="@android:color/white"
+        android:textStyle="bold"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:paddingStart="8dp"
         android:paddingEnd="8dp" />

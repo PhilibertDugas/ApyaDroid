@@ -23,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -36,13 +37,17 @@ public class EventMapActivity extends AppCompatActivity
         GoogleMap.OnMarkerClickListener {
 
     private String TAG = "APYA - " + EventMapActivity.class.getSimpleName();
-    private int PERMISSIONS_REQUEST_CODE = 111;
+    private final int PERMISSIONS_REQUEST_CODE = 111;
 
     private View container;
     private SlideView slideView;
     private Event event;
 
     private GoogleMap mMap;
+    private Circle eventRadius;
+
+    private final int COLOR_CIRCLE_INACTIVE = 0x33ff0000;
+    private final int COLOR_CIRCLE_ACTIVE = 0x66ff0000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +97,11 @@ public class EventMapActivity extends AppCompatActivity
                 }
             }
         });
-        mMap.addCircle(new CircleOptions()
+        eventRadius = mMap.addCircle(new CircleOptions()
             .center(event.getPos())
             .radius(event.getRange())
             .strokeColor(Color.TRANSPARENT)
-            .fillColor(0x55ff0000));
+            .fillColor(COLOR_CIRCLE_INACTIVE));
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
@@ -106,12 +111,16 @@ public class EventMapActivity extends AppCompatActivity
         Log.i(TAG, "onMapClick");
         slideView.setVisibility(View.INVISIBLE);
         slideView.invalidate();
+        eventRadius.setFillColor(COLOR_CIRCLE_INACTIVE);
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.i(TAG, "onMarkerClick");
         Parking parking = (Parking) marker.getTag();
+
+        slideView.setVisibility(View.VISIBLE);
+        slideView.invalidate();
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -123,8 +132,8 @@ public class EventMapActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.card_view, fragment);
         fragmentTransaction.commit();
 
-        slideView.setVisibility(View.VISIBLE);
-        slideView.invalidate();
+        eventRadius.setFillColor(COLOR_CIRCLE_ACTIVE);
+
         return false;
     }
 
