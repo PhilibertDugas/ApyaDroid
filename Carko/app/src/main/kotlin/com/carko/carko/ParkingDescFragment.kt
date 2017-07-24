@@ -8,16 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.Target
 import com.firebase.ui.storage.images.FirebaseImageLoader
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.fragment_parking_desc.*
 
 import kotlinx.android.synthetic.main.fragment_parking_desc.view.*
 
@@ -37,8 +36,12 @@ class ParkingDescFragment: Fragment() {
         layout.event_name.text = event.label
         layout.address.text = parking.address
         layout.description.text = parking.description
-        val reserveText = getString(R.string.reserve_now) + "\n" + parking.price.toString()
-        layout.reserve_button.text = reserveText
+        layout.price.text = parking.price.toString()
+        layout.reserve_button.isFocusable = true
+        layout.reserve_button.isClickable = true
+        layout.reserve_button.setOnClickListener {
+            Toast.makeText(context, "Reserve now!", Toast.LENGTH_LONG).show()
+        }
 
         if (parking.photoUrl != "") {
             Log.i(TAG, "Loading " + parking.photoUrl)
@@ -76,6 +79,7 @@ class ParkingDescFragment: Fragment() {
             RequestListener<StorageReference, GlideDrawable> {
         override fun onException(e: Exception, model: StorageReference,
                                  target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
+            Log.e(TAG, "Exception while loading image: ${e.message}")
             progressBar.visibility = View.GONE
             return true
         }
@@ -88,14 +92,4 @@ class ParkingDescFragment: Fragment() {
             return true
         }
     }
-
-//    private fun createTarget(image: ImageView, progress: ProgressBar): SimpleTarget<GlideDrawable> {
-//        return object: SimpleTarget<GlideDrawable>() {
-//            override fun onResourceReady(resource: GlideDrawable, glideAnimation: GlideAnimation<in GlideDrawable>) {
-//                image.setImageDrawable(resource)
-//                progress.visibility = View.GONE
-//                image.visibility = View.VISIBLE
-//            }
-//        }
-//    }
 }

@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,6 +48,7 @@ public class EventMapActivity extends AppCompatActivity
 
     private GoogleMap mMap;
     private Circle eventRadius;
+    private Marker activeMarker;
 
     private final int COLOR_CIRCLE_INACTIVE = 0x33ff0000;
     private final int COLOR_CIRCLE_ACTIVE = 0x66ff0000;
@@ -112,12 +116,14 @@ public class EventMapActivity extends AppCompatActivity
         slideView.setVisibility(View.INVISIBLE);
         slideView.invalidate();
         eventRadius.setFillColor(COLOR_CIRCLE_INACTIVE);
+        resetActiveMarker();
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.i(TAG, "onMarkerClick");
         Parking parking = (Parking) marker.getTag();
+        setActiveMarker(marker);
 
         slideView.setVisibility(View.VISIBLE);
         slideView.invalidate();
@@ -140,13 +146,35 @@ public class EventMapActivity extends AppCompatActivity
     private void addParkings(ArrayList<Parking> parkings) {
         for (Parking parking : parkings) {
             LatLng pos = parking.getLatLng();
-            MarkerOptions markerOptions = new MarkerOptions().position(pos);
             Log.i(TAG, "addMarker: " + pos.toString());
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(pos)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ghost));
             Marker marker = mMap.addMarker(markerOptions);
             marker.setTag(parking);
         }
     }
 
+    private void setActiveMarker(Marker marker) {
+        if (activeMarker != null) {
+            // Reset last active marker
+            activeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ghost));
+        }
+        activeMarker = marker;
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+        int width = bitmap.getWidth() + 20;
+        int height = bitmap.getHeight() + 20;
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
+    }
+
+    private void resetActiveMarker() {
+        if (activeMarker != null) {
+            // Reset last active marker
+            activeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ghost));
+        }
+        activeMarker = null;
+    }
 
     /* FIXME Permissions are not required right now but might be later */
     private void requestPermissions() {

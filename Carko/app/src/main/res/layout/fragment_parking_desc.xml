@@ -45,13 +45,29 @@
                 android:text="Rating"
                 android:textColor="@android:color/white"/>
         </LinearLayout>
-        <Button
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/reserve_button"
-            android:text="@string/reserve_now"
             android:background="@drawable/round_corner_button"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reserve_now"
+                android:textColor="@android:color/white"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

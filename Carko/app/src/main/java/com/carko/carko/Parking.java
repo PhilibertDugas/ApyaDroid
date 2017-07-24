@@ -76,9 +76,12 @@ class Parking implements Parcelable {
         float[] floats = {this.price, this.totalRevenue};
         boolean[] booleans = {this.isAvailable, this.isComplete, this.isDeleted};
 
+        String[] stringsArray = new String[strings.size()];
+        strings.toArray(stringsArray);
+
         out.writeIntArray(ints);
         out.writeDoubleArray(doubles);
-        out.writeStringArray((String[]) strings.toArray());
+        out.writeStringArray(stringsArray);
         out.writeFloatArray(floats);
         out.writeBooleanArray(booleans);
     }
