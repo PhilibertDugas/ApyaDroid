@@ -19,4 +19,11 @@
         <item name="android:background">@android:color/black</item>
     </style>
 
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@drawable/city_boulevard_min</item>
+    </style>
+
 </resources>

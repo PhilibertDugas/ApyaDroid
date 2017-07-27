@@ -120,16 +120,7 @@ public class MainActivity extends AppCompatActivity
         if (auth.getCurrentUser() != null) {
             Toast.makeText(this, "User already logged in!", Toast.LENGTH_SHORT).show();
         } else {
-            List<AuthUI.IdpConfig> providers = Arrays.asList(
-                    new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-            );
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(providers)
-                            .build(),
-                    RC_SIGN_IN);
+            startLogin();
             return true;
         }
 
@@ -156,7 +147,7 @@ public class MainActivity extends AppCompatActivity
             // open custom activity
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -192,6 +183,20 @@ public class MainActivity extends AppCompatActivity
 
             Toast.makeText(this, "Unknown response!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void startLogin() {
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
+        );
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setTheme(R.style.LoginTheme)
+                        .build(),
+                RC_SIGN_IN);
     }
 
 }

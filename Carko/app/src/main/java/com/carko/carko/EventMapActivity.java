@@ -59,7 +59,7 @@ public class EventMapActivity extends AppCompatActivity
         setContentView(R.layout.activity_event_map);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
@@ -68,7 +68,7 @@ public class EventMapActivity extends AppCompatActivity
         actionbar.setDisplayHomeAsUpEnabled(true);
 
         container = findViewById(R.id.event_map_container);
-        slideView = (SlideView) findViewById(R.id.slide_view);
+        slideView = findViewById(R.id.slide_view);
 
         // Get event
         Intent intent = getIntent();
@@ -149,7 +149,7 @@ public class EventMapActivity extends AppCompatActivity
             Log.i(TAG, "addMarker: " + pos.toString());
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(pos)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ghost));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_68));
             Marker marker = mMap.addMarker(markerOptions);
             marker.setTag(parking);
         }
