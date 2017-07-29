@@ -1,6 +1,7 @@
 package com.carko.carko;
 
 import android.Manifest;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -37,7 +38,8 @@ import java.util.ArrayList;
 public class EventMapActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        ReservationDialog.ReservationDialogListener {
 
     private String TAG = "APYA - " + EventMapActivity.class.getSimpleName();
     private final int PERMISSIONS_REQUEST_CODE = 111;
@@ -52,6 +54,7 @@ public class EventMapActivity extends AppCompatActivity
 
     private final int COLOR_CIRCLE_INACTIVE = 0x33ff0000;
     private final int COLOR_CIRCLE_ACTIVE = 0x66ff0000;
+    private final int MARKER_DRAWABLE = R.drawable.marker_68;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,13 +146,23 @@ public class EventMapActivity extends AppCompatActivity
         return false;
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        Toast.makeText(this, "Positive click!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        Toast.makeText(this, "Negative click!", Toast.LENGTH_SHORT).show();
+    }
+
     private void addParkings(ArrayList<Parking> parkings) {
         for (Parking parking : parkings) {
             LatLng pos = parking.getLatLng();
             Log.i(TAG, "addMarker: " + pos.toString());
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(pos)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_68));
+                    .icon(BitmapDescriptorFactory.fromResource(MARKER_DRAWABLE));
             Marker marker = mMap.addMarker(markerOptions);
             marker.setTag(parking);
         }
@@ -158,10 +171,10 @@ public class EventMapActivity extends AppCompatActivity
     private void setActiveMarker(Marker marker) {
         if (activeMarker != null) {
             // Reset last active marker
-            activeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ghost));
+            activeMarker.setIcon(BitmapDescriptorFactory.fromResource(MARKER_DRAWABLE));
         }
         activeMarker = marker;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), MARKER_DRAWABLE);
         int width = bitmap.getWidth() + 20;
         int height = bitmap.getHeight() + 20;
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
@@ -171,7 +184,7 @@ public class EventMapActivity extends AppCompatActivity
     private void resetActiveMarker() {
         if (activeMarker != null) {
             // Reset last active marker
-            activeMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ghost));
+            activeMarker.setIcon(BitmapDescriptorFactory.fromResource(MARKER_DRAWABLE));
         }
         activeMarker = null;
     }

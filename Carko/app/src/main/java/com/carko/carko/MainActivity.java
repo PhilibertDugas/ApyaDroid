@@ -2,6 +2,7 @@ package com.carko.carko;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -115,15 +116,14 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             Toast.makeText(this, "User already logged in!", Toast.LENGTH_SHORT).show();
         } else {
             startLogin();
-            return true;
+            return false;
         }
-
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();

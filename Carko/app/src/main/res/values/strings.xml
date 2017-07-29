@@ -66,4 +66,9 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
 
+    <!-- Reservation popup -->
+    <string name="reservation_dialog_title">Payment</string>
+    <string name="reservation_dialog_cancel">Cancel</string>
+    <string name="reservation_dialog_confirm">Confirm</string>
+
 </resources>

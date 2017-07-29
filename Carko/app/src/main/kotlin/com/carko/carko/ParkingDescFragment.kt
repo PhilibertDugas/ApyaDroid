@@ -1,6 +1,7 @@
 package com.carko.carko
 
 import android.app.Fragment
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,17 +15,25 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.AuthUI.IdpConfig
+import com.firebase.ui.auth.ErrorCodes
+import com.firebase.ui.auth.IdpResponse
+import com.firebase.ui.auth.ResultCodes
 import com.firebase.ui.storage.images.FirebaseImageLoader
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
 import kotlinx.android.synthetic.main.fragment_parking_desc.view.*
+import java.util.*
 
 class ParkingDescFragment: Fragment() {
     companion object {
         val TAG = "APYA - " + ParkingDescFragment::class.java.getSimpleName()
         val PARKING_KEY = "com.carko.carko.PARKING_KEY"
         val EVENT_KEY = "com.carko.carko.EVENT_KEY"
+        val RC_SIGN_IN = 3235
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup,
@@ -37,10 +46,14 @@ class ParkingDescFragment: Fragment() {
         layout.address.text = parking.address
         layout.description.text = parking.description
         layout.price.text = parking.price.toString()
-        layout.reserve_button.isFocusable = true
-        layout.reserve_button.isClickable = true
         layout.reserve_button.setOnClickListener {
             Toast.makeText(context, "Reserve now!", Toast.LENGTH_LONG).show()
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser != null) {
+                startReservation()
+            } else {
+                startLogin()
+            }
         }
 
         if (parking.photoUrl != "") {
@@ -72,6 +85,57 @@ class ParkingDescFragment: Fragment() {
         }
 
         return layout
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            // Successfully signed in
+            if (resultCode == ResultCodes.OK) {
+                startReservation()
+                return
+            } else {
+                // Sign in failed
+                if (response == null) {
+                    // User pressed back button
+                    Toast.makeText(activity, "Sign in cancelled!", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                if (response.errorCode == ErrorCodes.NO_NETWORK) {
+                    Toast.makeText(activity, "No network!", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                if (response.errorCode == ErrorCodes.UNKNOWN_ERROR) {
+                    Toast.makeText(activity, "Unknown error!", Toast.LENGTH_SHORT).show()
+                    return
+                }
+            }
+
+            Toast.makeText(activity, "Unknown response!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun startReservation(){
+        val dialog = ReservationDialog()
+        dialog.show(fragmentManager, "reservation")
+    }
+
+    private fun startLogin(){
+        val providers = Arrays.asList<IdpConfig>(
+                IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
+        )
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setTheme(R.style.LoginTheme)
+                        .build(),
+                RC_SIGN_IN)
     }
 
     private class FirebaseRequestListener(private val imageView: ImageView,

@@ -52,7 +52,9 @@
             android:background="@drawable/round_corner_button"
             android:padding="8dp"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:focusable="true"
+            android:clickable="true">
 
             <TextView
                 android:layout_width="wrap_content"
