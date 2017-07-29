@@ -44,7 +44,8 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".ReservationDialog" />
+            android:name=".ReservationDialog"
+            android:theme="@style/ReservationDialog"/>
     </application>
 
 </manifest>

@@ -1,45 +1,30 @@
 package com.carko.carko
 
-import android.app.Dialog
-import android.app.DialogFragment
-import android.content.Context
+import android.app.Activity
 import android.os.Bundle
-import android.widget.Toast
+
+import kotlinx.android.synthetic.main.reservation_dialog.*
 
 
-class ReservationDialog : DialogFragment() {
-
-    interface ReservationDialogListener {
-        fun onDialogPositiveClick(dialog: DialogFragment)
-        fun onDialogNegativeClick(dialog: DialogFragment)
+class ReservationDialog : Activity() {
+    companion object {
+        val EVENT_PRICE_KEY = "com.carko.carko.EVENT_PRICE_KEY"
     }
 
-    private var mListener: ReservationDialogListener? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            // Instantiate the ReservationDialogListener so we can send events to the host
-            mListener = context as ReservationDialogListener
-        } catch (e: ClassCastException) {
-            // The activity doesn't implement the interface, throw exception
-            throw ClassCastException(context.toString() + " must implement ReservationDialogListener")
-        }
-
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val builder = android.app.AlertDialog.Builder(activity)
-        builder.setTitle(R.string.reservation_dialog_title)
-        builder.setMessage("20$")
-        builder.setPositiveButton(R.string.reservation_dialog_confirm, {dialog, id ->
-            mListener?.onDialogPositiveClick(this)
-        })
-        builder.setNegativeButton(R.string.reservation_dialog_cancel, {dialog, id ->
-            mListener?.onDialogNegativeClick(this)
-        })
-        val dialog = builder.create()
-        return dialog
+        setContentView(R.layout.reservation_dialog)
+
+        val event_price = intent.getFloatExtra(EVENT_PRICE_KEY, 0.0f)
+        price.text = event_price.toString()
+
+        confirm_button.setOnClickListener {
+            setResult(RESULT_OK)
+            finish()
+        }
+        cancel_button.setOnClickListener {
+            setResult(RESULT_CANCELED)
+            finish()
+        }
     }
 }

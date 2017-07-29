@@ -3,20 +3,20 @@
     <item android:state_pressed="true" >
         <shape android:shape="rectangle"  >
             <corners android:radius="3dip" />
-            <gradient android:angle="-90" android:startColor="#ff8181" android:endColor="#ff4444"  />
+            <solid android:color="@color/cancelButtonClickedColor" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle"  >
             <corners android:radius="3dip" />
-            <stroke android:width="1dip" android:color="#ff0008" />
-            <solid android:color="#ff0000"/>
+            <stroke android:width="1dip" android:color="@color/cancelButtonFocusedColor" />
+            <solid android:color="@color/cancelButtonFocusedColor"/>
         </shape>
     </item>
     <item >
         <shape android:shape="rectangle"  >
             <corners android:radius="3dip" />
-            <gradient android:angle="-90" android:startColor="#ff4444" android:endColor="#ff0000" />
+            <solid android:color="@color/cancelButtonColor" />
         </shape>
     </item>
 </selector>

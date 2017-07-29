@@ -55,6 +55,8 @@ public class Event implements Parcelable {
 
     public int getRange() { return this.range; }
 
+    public float getPrice() { return this.price; }
+
     public String toString(){
         String string = "Event " + id + ": " + label;
         return string;

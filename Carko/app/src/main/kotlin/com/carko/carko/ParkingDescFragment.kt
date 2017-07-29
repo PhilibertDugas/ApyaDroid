@@ -34,13 +34,17 @@ class ParkingDescFragment: Fragment() {
         val PARKING_KEY = "com.carko.carko.PARKING_KEY"
         val EVENT_KEY = "com.carko.carko.EVENT_KEY"
         val RC_SIGN_IN = 3235
+        val RC_DIALOG = 3236
     }
+
+    lateinit var event: Event
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup,
                           savedInstanceState: Bundle?): View {
         val layout = inflater.inflate(R.layout.fragment_parking_desc, container, false)
-        val event = arguments.getParcelable<Event>(EVENT_KEY)
         val parking = arguments.getParcelable<Parking>(PARKING_KEY)
+
+        event = arguments.getParcelable<Event>(EVENT_KEY)
 
         layout.event_name.text = event.label
         layout.address.text = parking.address
@@ -90,38 +94,53 @@ class ParkingDescFragment: Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
+            onLoginResult(resultCode, data)
+        } else if (requestCode == RC_DIALOG) {
+            onReservationResult(resultCode, data)
+        }
+    }
 
-            // Successfully signed in
-            if (resultCode == ResultCodes.OK) {
-                startReservation()
+    private fun onLoginResult(resultCode: Int, data: Intent?) {
+        val response = IdpResponse.fromResultIntent(data)
+
+        // Successfully signed in
+        if (resultCode == ResultCodes.OK) {
+            startReservation()
+            return
+        } else {
+            // Sign in failed
+            if (response == null) {
+                // User pressed back button
+                Toast.makeText(activity, "Sign in cancelled!", Toast.LENGTH_SHORT).show()
                 return
-            } else {
-                // Sign in failed
-                if (response == null) {
-                    // User pressed back button
-                    Toast.makeText(activity, "Sign in cancelled!", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                if (response.errorCode == ErrorCodes.NO_NETWORK) {
-                    Toast.makeText(activity, "No network!", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                if (response.errorCode == ErrorCodes.UNKNOWN_ERROR) {
-                    Toast.makeText(activity, "Unknown error!", Toast.LENGTH_SHORT).show()
-                    return
-                }
             }
 
-            Toast.makeText(activity, "Unknown response!", Toast.LENGTH_SHORT).show()
+            if (response.errorCode == ErrorCodes.NO_NETWORK) {
+                Toast.makeText(activity, "No network!", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if (response.errorCode == ErrorCodes.UNKNOWN_ERROR) {
+                Toast.makeText(activity, "Unknown error!", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        Toast.makeText(activity, "Unknown response!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onReservationResult(resultCode: Int, data: Intent?) {
+        if (resultCode == ResultCodes.OK) {
+            Toast.makeText(activity, "Positive click!", Toast.LENGTH_SHORT).show()
+        } else if (resultCode == ResultCodes.CANCELED) {
+            Toast.makeText(activity, "Cancelled!", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun startReservation(){
-        val dialog = ReservationDialog()
-        dialog.show(fragmentManager, "reservation")
+        val intent = Intent(activity, ReservationDialog::class.java)
+        intent.putExtra(ReservationDialog.EVENT_PRICE_KEY, event.price)
+        startActivityForResult(intent, RC_DIALOG)
     }
 
     private fun startLogin(){

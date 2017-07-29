@@ -38,8 +38,7 @@ import java.util.ArrayList;
 public class EventMapActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
-        GoogleMap.OnMarkerClickListener,
-        ReservationDialog.ReservationDialogListener {
+        GoogleMap.OnMarkerClickListener {
 
     private String TAG = "APYA - " + EventMapActivity.class.getSimpleName();
     private final int PERMISSIONS_REQUEST_CODE = 111;
@@ -144,16 +143,6 @@ public class EventMapActivity extends AppCompatActivity
         eventRadius.setFillColor(COLOR_CIRCLE_ACTIVE);
 
         return false;
-    }
-
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        Toast.makeText(this, "Positive click!", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-        Toast.makeText(this, "Negative click!", Toast.LENGTH_SHORT).show();
     }
 
     private void addParkings(ArrayList<Parking> parkings) {
