@@ -11,14 +11,14 @@ import android.view.View;
  * Created by fabrice on 2017-06-13.
  */
 
-public class EventOffsetDecoration extends RecyclerView.ItemDecoration {
+class EventOffsetDecoration extends RecyclerView.ItemDecoration {
     private int mItemOffset;
 
-    public EventOffsetDecoration(int itemOffset) {
+    EventOffsetDecoration(int itemOffset) {
         mItemOffset = itemOffset;
     }
 
-    public EventOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
+    EventOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
         this(context.getResources().getDimensionPixelSize(itemOffsetId));
     }
 

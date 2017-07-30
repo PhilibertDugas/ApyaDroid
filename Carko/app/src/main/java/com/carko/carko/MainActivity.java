@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.carko.carko.controllers.EventClient;
+import com.carko.carko.models.Event;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;

@@ -1,7 +1,6 @@
 package com.carko.carko;
 
 import android.Manifest;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -22,6 +21,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.carko.carko.controllers.EventClient;
+import com.carko.carko.models.Event;
+import com.carko.carko.models.Parking;
+import com.carko.carko.views.SlideView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

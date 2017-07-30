@@ -22,7 +22,7 @@
         android:layout_height="match_parent" />
 
 
-    <com.carko.carko.SlideView
+    <com.carko.carko.views.SlideView
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:visibility="invisible"
@@ -44,6 +44,6 @@
 
         </android.support.v7.widget.CardView>
 
-    </com.carko.carko.SlideView>
+    </com.carko.carko.views.SlideView>
 
 </android.support.design.widget.CoordinatorLayout>

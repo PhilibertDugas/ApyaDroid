@@ -1,4 +1,4 @@
-package com.carko.carko
+package com.carko.carko.views
 
 import android.app.Activity
 import android.content.Context
@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.util.TypedValue
+import com.carko.carko.R
 
 class SlideView(context: Context, attrs: AttributeSet): FrameLayout(context, attrs){
     companion object {

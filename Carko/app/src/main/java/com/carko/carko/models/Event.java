@@ -1,10 +1,9 @@
-package com.carko.carko;
+package com.carko.carko.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-//import com.mapbox.mapboxsdk.geometry.LatLng;
-
+import com.carko.carko.controllers.EventClient;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -27,7 +26,7 @@ public class Event implements Parcelable {
     private String startTime;
     private String endTime;
 
-    Event(JSONObject obj) throws JSONException{
+    public Event(JSONObject obj) throws JSONException{
         this.photoURL = obj.getString("photo_url");
         this.id = obj.getInt("id");
         this.label = obj.getString("label");

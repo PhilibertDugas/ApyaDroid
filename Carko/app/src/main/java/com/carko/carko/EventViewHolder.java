@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carko.carko.models.Event;
+
 /**
  * Created by fabrice on 2017-06-11.
  */

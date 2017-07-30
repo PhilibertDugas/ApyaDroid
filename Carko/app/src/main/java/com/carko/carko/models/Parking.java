@@ -1,16 +1,16 @@
-package com.carko.carko;
+package com.carko.carko.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.carko.carko.JSONHelper;
 import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class Parking implements Parcelable {
+public class Parking implements Parcelable {
 
     private String TAG = Parking.class.getSimpleName();
 
@@ -28,7 +28,7 @@ class Parking implements Parcelable {
     private boolean isComplete;
     private boolean isDeleted;
 
-    Parking(JSONObject jsonObject) {
+    public Parking(JSONObject jsonObject) {
         id = JSONHelper.INSTANCE.getInt(jsonObject, "id");
         customerId = JSONHelper.INSTANCE.getInt(jsonObject,"customer_id");
         latLng = new LatLng(
@@ -47,17 +47,17 @@ class Parking implements Parcelable {
         photoUrls = JSONHelper.INSTANCE.getArray(jsonObject, "multiple_photo_urls");
     }
 
-    long getId(){ return id; }
-    LatLng getLatLng(){ return latLng; }
-    String getAvailability() { return ""; }
-    String getAddress() { return address; }
-    String getDescription() { return description; }
-    int getDrawable() {
+    public long getId(){ return id; }
+    public LatLng getLatLng(){ return latLng; }
+    public String getAvailability() { return ""; }
+    public String getAddress() { return address; }
+    public String getDescription() { return description; }
+    public int getDrawable() {
         return 0;
     }
-    float getPrice() { return price; }
-    String getPhotoUrl() { return photoUrl; }
-    ArrayList<String> getPhotoUrls() { return photoUrls; }
+    public float getPrice() { return price; }
+    public String getPhotoUrl() { return photoUrl; }
+    public ArrayList<String> getPhotoUrls() { return photoUrls; }
 
     @Override
     public int describeContents(){
@@ -129,4 +129,7 @@ class Parking implements Parcelable {
         this.isDeleted = booleans[2];
     }
 
+    private class AvailabilityInfo {
+        AvailabilityInfo(JSONObject info){}
+    }
 }

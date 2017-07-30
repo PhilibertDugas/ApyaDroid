@@ -1,4 +1,4 @@
-package com.carko.carko;
+package com.carko.carko.controllers;
 
 import android.net.Uri;
 import android.util.Log;
@@ -7,6 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.carko.carko.models.Event;
+import com.carko.carko.models.Parking;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,15 +16,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class EventClient {
+public class EventClient {
 
-    interface Complete<T> {
+    public interface Complete<T> {
         void onComplete(T response, String e);
     }
 
     private static String TAG = "APYA - " + EventClient.class.getSimpleName();
 
-    static void getAllEvents(final Complete complete) {
+    public static void getAllEvents(final Complete complete) {
         Uri baseUrl = ApiClient.getInstance().getBaseUrl();
         Uri.Builder uriBuilder = baseUrl.buildUpon();
         uriBuilder.appendPath("events");

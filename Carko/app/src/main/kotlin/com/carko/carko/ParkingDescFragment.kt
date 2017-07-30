@@ -15,6 +15,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.carko.carko.models.Event
+import com.carko.carko.models.Parking
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.AuthUI.IdpConfig
 import com.firebase.ui.auth.ErrorCodes

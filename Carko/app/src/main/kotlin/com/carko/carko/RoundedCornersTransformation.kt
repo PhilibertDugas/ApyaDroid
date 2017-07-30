@@ -189,7 +189,7 @@ class RoundedCornersTransformation(
     }
 
     override fun getId(): String {
-        return "RoundedTransformation(radius=$mRadius, margin=$mMargin, diameter="
-        (+mDiameter).toString() + ", cornerType=" + mCornerType.name + ")"
+        return "RoundedTransformation(radius=$mRadius, margin=$mMargin, diameter=$mDiameter" +
+                ", cornerType=${mCornerType.name}"
     }
 }
