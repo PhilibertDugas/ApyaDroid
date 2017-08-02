@@ -5,6 +5,9 @@
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fb391022657960952</string>
 
+    <!-- Preferences file -->
+    <string name="preferences_file">com.carko.carko.PREFERENCE_FILE_KEY</string>
+
     <!-- Main activity -->
     <string name="title_activity_main">Apya</string>
 
