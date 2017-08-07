@@ -1,35 +1,71 @@
 package com.carko.carko.models
 
-import org.json.JSONArray
+import com.carko.carko.controllers.CustomerClient
+import org.json.JSONObject
 
 /**
  * Created by fabrice on 2017-07-29.
  */
-class Customer: Model {
+class Customer(
+        var email: String,
+        var displayName: String,
+        var id: Int,
+        var firebaseId: String,
+        var stripeId: String,
+        var vehicule: Vehicule?,
+        var accountId: String?,
+        var externalLast4Digits: String?,
+        var externalBankName: String?): Model {
 
-    lateinit var email: String
-    lateinit var displayName: String
-    var id: Int = 0
-    lateinit var firebaseId: String
-    lateinit var stripeId: String
-    var vehicule: Vehicule? = null
-    var accountId: String? = null
-    var externalLast4Digits: String? = null
-    var externalBankName: String? = null
+    constructor(json: JSONObject): this(
+            json.getString("email"),
+            json.getString("displayName"),
+            json.getInt("id"),
+            json.getString("firebaseId"),
+            json.getString("firebaseId"),
+            if (json.getJSONObject("vehicule") != null)
+                Vehicule(json.getJSONObject("vehicule"))
+            else
+                null,
+            json.getString("accountId"),
+            json.getString("externalLast4Digits"),
+            json.getString("externalBankName")
+    )
 
-    constructor(email: String, displayName: String, id: Int, firebaseId: String, stripeId: String,
-                vehicule: Vehicule?, accountId: String?, externalLast4Digits: String?,
-                externalBankName: String?) {
-        this.email = email
-        this.displayName = displayName
-        this.id = id
-        this.firebaseId = firebaseId
-        this.stripeId = stripeId
-        this.vehicule = vehicule
-        this.accountId = accountId
-        this.externalLast4Digits = externalLast4Digits
-        this.externalBankName = externalBankName
+    override fun toJson(): JSONObject {
+        val json = JSONObject()
+        json.put("email", this.email)
+        json.put("displayName", this.displayName)
+        json.put("id", this.id)
+        json.put("firebaseId", this.firebaseId)
+        json.put("stripeId", this.stripeId)
+        json.put("vehicule", this.vehicule?.toJson())
+        json.put("accountId", this.accountId)
+        json.put("externalLast4Digits", this.externalLast4Digits)
+        json.put("externalBankName", this.externalBankName)
+        return json
     }
 
-    constructor(data: JSONArray): super(data)
+    companion object {
+        fun getCustomer(complete: (Customer?, String?) -> Unit) {
+            CustomerClient.getCustomer(complete)
+        }
+    }
+
+    class NewCustomer(var email: String?,
+                      var displayName: String?,
+                      var firebaseId: String): Model {
+
+        override fun toJson(): JSONObject {
+            val json = JSONObject()
+            json.put("email", this.email)
+            json.put("displayName", this.displayName)
+            json.put("firebaseId", this.firebaseId)
+            return json
+        }
+
+        fun register(complete: (String?) -> Unit) {
+            CustomerClient.postCustomer(this, complete)
+        }
+    }
 }

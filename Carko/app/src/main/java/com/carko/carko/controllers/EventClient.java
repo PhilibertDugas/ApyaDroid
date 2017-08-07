@@ -57,7 +57,7 @@ public class EventClient {
         ApiClient.getInstance().addRequest(request);
     }
 
-    static void getEventParkings(Event event, final Complete complete){
+    public static void getEventParkings(Event event, final Complete complete){
         Uri baseUrl = ApiClient.getInstance().getBaseUrl();
         Uri.Builder uriBuilder = baseUrl.buildUpon()
                 .appendPath("events")
