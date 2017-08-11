@@ -17,7 +17,12 @@ object AuthenticationHelper {
 
     fun customerLoggedIn(customer: Customer) {
         updateAuthToken({ error ->
+            if (error != null) {
+                Log.e(TAG, error.toString())
+                return@updateAuthToken
+            }
             AppState.cacheCustomer(customer)
+            Log.i(TAG, "Customer logged in!")
             // TODO Notify observers
         })
     }
@@ -55,15 +60,17 @@ object AuthenticationHelper {
         }
     }
 
-    fun updateAuthToken(complete: (Exception?) -> Unit) {
+    fun updateAuthToken(complete: (Error?) -> Unit) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         currentUser?.getIdToken(true)
                 ?.addOnCompleteListener { task ->
+                    Log.i(TAG, "Retrieved id token")
                     AppState.cacheAuthToken(task.result.token)
                     complete(null)
                 }
                 ?.addOnFailureListener { exception ->
-                    complete(exception)
+                    Log.e(TAG, "Failed to get firebase id token")
+                    complete(Error(exception))
                 }
     }
 
@@ -71,17 +78,16 @@ object AuthenticationHelper {
         Log.i(TAG, "Ensuring customer in backed!")
         Customer.getCustomer { customer, error ->
             if (error != null) {
-                Log.e(TAG, error)
+                Log.e(TAG, error.toString())
             } else if (customer != null) {
-                Log.i(TAG, "Customer logged in!")
                 AuthenticationHelper.customerLoggedIn(customer)
             } else {
                 // New customer flow
-                Log.i(TAG, "New user!")
-                val newCustomer = Customer.NewCustomer(user.email, user.displayName, user.providerId)
+                Log.i(TAG, "New user! (%s, %s %s)".format(user.email, user.displayName, user.uid))
+                val newCustomer = Customer.NewCustomer(user.email, user.displayName, user.uid)
                 newCustomer.register({ new_error ->
                     if (new_error != null) {
-                        Log.e(TAG, new_error.toString())
+                        Log.e(TAG, new_error.message)
                         FirebaseAuth.getInstance().signOut()
                     } else {
                         this.initCustomer()

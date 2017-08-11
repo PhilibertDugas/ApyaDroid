@@ -7,6 +7,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.carko.carko.ApyaApp;
+import com.carko.carko.AuthenticationHelper;
+
+import java.util.HashMap;
 
 /**
  * Created by fabrice on 2017-06-17.
@@ -59,5 +62,11 @@ public class ApiClient {
         if (requestQueue != null) {
             requestQueue.cancelAll(tag);
         }
+    }
+
+    public HashMap<String, String> getAuthHeaders() {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + AuthenticationHelper.INSTANCE.getAuthToken());
+        return headers;
     }
 }

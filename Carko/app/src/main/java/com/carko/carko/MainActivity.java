@@ -88,19 +88,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
-        // Authentication
-        initAuthentication();
-
-        if (AuthenticationHelper.INSTANCE.customerAvailable()) {
-            Customer customer = AuthenticationHelper.INSTANCE.getCustomer();
-            Log.i(TAG, "Customer logged in: " + customer.toJson().toString());
-        }
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Log.i(TAG, "FirebaseUser: " + user.getDisplayName());
-        }
     }
 
     @Override
@@ -131,12 +118,18 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
+        if (AuthenticationHelper.INSTANCE.customerAvailable()) {
             Toast.makeText(this, "User already logged in!", Toast.LENGTH_SHORT).show();
+            Customer customer = AuthenticationHelper.INSTANCE.getCustomer();
+            Log.i(TAG, customer.toJson().toString());
+
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                Log.i(TAG, "FirebaseUser: " + user.getDisplayName());
+            }
         } else {
-            startLogin();
-            return false;
+            AuthenticationHelper.UI.INSTANCE.startLogin(this);
+            return true;
         }
 
         // Handle navigation view item clicks here.
@@ -175,6 +168,8 @@ public class MainActivity extends AppCompatActivity
             // Successfully signed in
             if (resultCode == ResultCodes.OK) {
                 Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                AuthenticationHelper.INSTANCE.ensureCustomerInBackend(user);
                 return;
             } else {
                 // Sign in failed
@@ -198,27 +193,4 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "Unknown response!", Toast.LENGTH_SHORT).show();
         }
     }
-
-    private void startLogin() {
-        AuthenticationHelper.UI.INSTANCE.startLogin(this);
-    }
-
-    private void initAuthentication() {
-        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth auth) {
-                if (auth.getCurrentUser() != null) {
-                    // Signed in
-                    Log.i(TAG, "AuthStateListener: signed in!");
-                    AuthenticationHelper.INSTANCE.
-                            ensureCustomerInBackend(auth.getCurrentUser());
-                } else {
-                    // Signed out
-                    Log.i(TAG, "AuthStateListener: signed out!");
-                    AuthenticationHelper.INSTANCE.resetCustomer();
-                }
-            }
-        });
-    }
-
 }

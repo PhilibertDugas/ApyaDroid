@@ -26,7 +26,7 @@ object VehiculeClient {
         val vehiculeUrl = uriBuilder.build()
         val body = vehicule.toJson()
         Log.i(TAG, "postVehicule() - url: %s".format(vehiculeUrl.toString()))
-        val request = JsonObjectRequest(
+        val request = object: JsonObjectRequest(
                 Request.Method.POST,
                 vehiculeUrl.toString(),
                 body,
@@ -44,7 +44,12 @@ object VehiculeClient {
                     Log.e(this@VehiculeClient.TAG, "Error: " + error.toString())
                     error.printStackTrace()
                     complete(null, Error(error.toString(), error))
-                })
+                }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return ApiClient.getInstance().authHeaders
+            }
+        }
         ApiClient.getInstance().addRequest(request)
     }
 
@@ -68,7 +73,7 @@ object VehiculeClient {
         val vehiculeUrl = uriBuilder.build()
         val body = vehicule.toJson()
         Log.i(TAG, "updateVehicule() - url: %s".format(vehiculeUrl.toString()))
-        val request = JsonObjectRequest(
+        val request = object: JsonObjectRequest(
                 Request.Method.PATCH,
                 vehiculeUrl.toString(),
                 body,
@@ -79,7 +84,12 @@ object VehiculeClient {
                     Log.e(this@VehiculeClient.TAG, "Error: " + error.toString())
                     error.printStackTrace()
                     complete(Error(error.toString(), error))
-                })
+                }) {
+
+            override fun getHeaders(): MutableMap<String, String> {
+                return ApiClient.getInstance().authHeaders
+            }
+        }
         ApiClient.getInstance().addRequest(request)
     }
 }
