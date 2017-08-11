@@ -1,11 +1,12 @@
 package com.carko.carko
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import com.carko.carko.models.Customer
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import java.util.*
 
 /**
@@ -14,51 +15,51 @@ import java.util.*
 object AuthenticationHelper {
     val TAG = "APYA - AuthHelper"
 
-    fun customerLoggedIn(context: Context, customer: Customer) {
-        updateAuthToken(context, { error ->
-            AppState.cacheCustomer(context, customer)
+    fun customerLoggedIn(customer: Customer) {
+        updateAuthToken({ error ->
+            AppState.cacheCustomer(customer)
             // TODO Notify observers
         })
     }
 
-    fun customerAvailable(context: Context): Boolean {
-        val customer = AppState.cachedCustomer(context)
-        val authToken = AppState.cachedToken(context)
-        return FirebaseAuth.getInstance().currentUser == null ||
-                customer == null ||
-                authToken == null
+    fun customerAvailable(): Boolean {
+        val customer = AppState.cachedCustomer()
+        val authToken = AppState.cachedToken()
+        return FirebaseAuth.getInstance().currentUser != null ||
+                customer != null ||
+                authToken != null
     }
 
     // This should only be called if customerAvailable() returns true
-    fun getCustomer(context: Context): Customer? {
-        return AppState.cachedCustomer(context)
+    fun getCustomer(): Customer? {
+        return AppState.cachedCustomer()
     }
 
-    fun updateCustomer(context: Context, customer: Customer) {
-        AppState.cacheCustomer(context, customer)
+    fun updateCustomer(customer: Customer) {
+        AppState.cacheCustomer(customer)
     }
 
     // This should only be called is customerAvailable() returns true
-    fun getAuthToken(context: Context): String? {
-        return AppState.cachedToken(context)
+    fun getAuthToken(): String? {
+        return AppState.cachedToken()
     }
 
-    fun resetCustomer(context: Context) {
+    fun resetCustomer() {
         try {
             // TODO Do FB too
             FirebaseAuth.getInstance().signOut()
             // FBSDKAccessToken.setCurrent(nil)
-            AppState.resetCustomer(context)
+            AppState.resetCustomer()
         } catch (exception: Exception) {
-
+            Log.e(TAG, exception.toString())
         }
     }
 
-    fun updateAuthToken(context : Context, complete: (Exception?) -> Unit) {
+    fun updateAuthToken(complete: (Exception?) -> Unit) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         currentUser?.getIdToken(true)
                 ?.addOnCompleteListener { task ->
-                    AppState.cacheAuthToken(context, task.result.token)
+                    AppState.cacheAuthToken(task.result.token)
                     complete(null)
                 }
                 ?.addOnFailureListener { exception ->
@@ -66,34 +67,57 @@ object AuthenticationHelper {
                 }
     }
 
-    fun ensureCustomerInBackend(context: Context, user: User) {
+    fun ensureCustomerInBackend(user: FirebaseUser) {
+        Log.i(TAG, "Ensuring customer in backed!")
         Customer.getCustomer { customer, error ->
             if (error != null) {
                 Log.e(TAG, error)
             } else if (customer != null) {
-                AuthenticationHelper.customerLoggedIn(context, customer)
+                Log.i(TAG, "Customer logged in!")
+                AuthenticationHelper.customerLoggedIn(customer)
             } else {
                 // New customer flow
-                val newCustomer = Customer.NewCustomer(user.email, user.name, user.providerId)
-                newCustomer.register({ error ->
-                    if (error != null) {
-                        Log.e(TAG, error.toString())
+                Log.i(TAG, "New user!")
+                val newCustomer = Customer.NewCustomer(user.email, user.displayName, user.providerId)
+                newCustomer.register({ new_error ->
+                    if (new_error != null) {
+                        Log.e(TAG, new_error.toString())
                         FirebaseAuth.getInstance().signOut()
                     } else {
-                        this.initCustomer(context)
+                        this.initCustomer()
                     }
                 })
             }
         }
     }
 
-    private fun initCustomer(context: Context) {
+    private fun initCustomer() {
         Customer.getCustomer { customer, error ->
             if (error != null) {
                 Log.e(TAG, error.toString())
             } else if (customer != null){
-                AuthenticationHelper.customerLoggedIn(context, customer)
+                AuthenticationHelper.customerLoggedIn(customer)
             }
+        }
+    }
+
+    object UI {
+        val RC_SIGN_IN = 3235
+
+        private fun getAuthUI(): Intent {
+            val providers = Arrays.asList<AuthUI.IdpConfig>(
+                    AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                    AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
+            )
+            return AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(providers)
+                    .setTheme(R.style.LoginTheme)
+                    .build()
+        }
+
+        fun startLogin(activity: Activity) {
+            activity.startActivityForResult(getAuthUI(), RC_SIGN_IN)
         }
     }
 }

@@ -1,27 +1,25 @@
 package com.carko.carko.controllers;
 
-import android.app.Application;
 import android.net.Uri;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.carko.carko.ApyaApp;
 
 /**
  * Created by fabrice on 2017-06-17.
  */
 
-public class ApiClient extends Application{
+public class ApiClient {
     public static final String TAG = ApiClient.class.getSimpleName();
 
     private Uri baseUrl;
     private RequestQueue requestQueue;
     private static ApiClient instance;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    private ApiClient() {
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("https");
         uriBuilder.authority("integration-apya.herokuapp.com");
@@ -29,13 +27,16 @@ public class ApiClient extends Application{
         instance = this;
     }
 
-    public static ApiClient getInstance(){
+    public static ApiClient getInstance() {
+        if (instance == null) {
+            instance = new ApiClient();
+        }
         return instance;
     }
 
-    public RequestQueue getRequestQueue(){
+    private RequestQueue getRequestQueue(){
         if (requestQueue == null){
-            requestQueue = Volley.newRequestQueue(getApplicationContext());
+            requestQueue = Volley.newRequestQueue(ApyaApp.Companion.getAppContext());
         }
         return requestQueue;
     }

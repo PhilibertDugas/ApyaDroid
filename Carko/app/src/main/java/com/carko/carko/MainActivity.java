@@ -16,16 +16,15 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.carko.carko.controllers.EventClient;
+import com.carko.carko.models.Customer;
 import com.carko.carko.models.Event;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
-import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,23 +43,23 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
         // Drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         // Navigation view
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Events view
-        recyclerView = (RecyclerView) findViewById(R.id.eventsRecyclerView);
+        recyclerView = findViewById(R.id.eventsRecyclerView);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -89,6 +88,19 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
+        // Authentication
+        initAuthentication();
+
+        if (AuthenticationHelper.INSTANCE.customerAvailable()) {
+            Customer customer = AuthenticationHelper.INSTANCE.getCustomer();
+            Log.i(TAG, "Customer logged in: " + customer.toJson().toString());
+        }
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            Log.i(TAG, "FirebaseUser: " + user.getDisplayName());
+        }
     }
 
     @Override
@@ -188,17 +200,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startLogin() {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-        );
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setTheme(R.style.LoginTheme)
-                        .build(),
-                RC_SIGN_IN);
+        AuthenticationHelper.UI.INSTANCE.startLogin(this);
+    }
+
+    private void initAuthentication() {
+        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth auth) {
+                if (auth.getCurrentUser() != null) {
+                    // Signed in
+                    Log.i(TAG, "AuthStateListener: signed in!");
+                    AuthenticationHelper.INSTANCE.
+                            ensureCustomerInBackend(auth.getCurrentUser());
+                } else {
+                    // Signed out
+                    Log.i(TAG, "AuthStateListener: signed out!");
+                    AuthenticationHelper.INSTANCE.resetCustomer();
+                }
+            }
+        });
     }
 
 }

@@ -3,6 +3,7 @@ package com.carko.carko.controllers
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 import com.carko.carko.models.Customer
 import com.google.firebase.auth.FirebaseAuth
 import org.json.JSONException
@@ -21,23 +22,27 @@ object CustomerClient {
                 .appendPath(FirebaseAuth.getInstance().currentUser?.uid)
         val customerUrl = uriBuilder.build()
         Log.i(TAG, "get customer url: " + customerUrl.toString())
-        val request = JsonObjectRequest(
+        val request = StringRequest(
                 Request.Method.GET,
                 customerUrl.toString(),
-                null, { response ->
-            Log.i(TAG, response.toString())
-            var error: String? = null
-            var customer: Customer? = null
-            try {
-                customer = Customer(response)
-            } catch (e: JSONException) {
-                error = e.toString()
-            }
-            complete(customer, error)
-        }, { error ->
-            Log.e(TAG, "Error: " + error.toString())
-            complete(null, error.toString())
-        })
+                { response ->
+                    Log.i(TAG, "Response: " + response.toString())
+                    var customer: Customer? = null
+                    var error: String? = null
+                    if (response != null) {
+                        Log.i(TAG, "Got a customer, trying to initialize...")
+                        try {
+                            customer = Customer(JSONObject(response))
+                        } catch (e: JSONException) {
+                            error = e.toString()
+                        }
+                    }
+                    complete(customer, error)
+                }, { error ->
+                    Log.e(TAG, "Error: " + error.toString())
+                    error.printStackTrace()
+                    complete(null, error.toString())
+                })
         ApiClient.getInstance().addRequest(request)
     }
 
@@ -53,9 +58,10 @@ object CustomerClient {
                 Request.Method.POST,
                 customerUrl.toString(),
                 parameters, { response ->
+            Log.i(TAG, "postCustomer() - response: %s".format(response))
             complete(null)
         }, { error ->
-            Log.e(TAG, error.toString())
+            Log.e(TAG, "postCustomer() - error: %s".format(error.toString()))
             complete(error.toString())
         })
         ApiClient.getInstance().addRequest(request)
