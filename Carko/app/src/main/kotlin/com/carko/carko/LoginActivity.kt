@@ -24,12 +24,10 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-            // Successfully signed in
             if (resultCode == ResultCodes.OK) {
-
-            } else {
-
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                AuthenticationHelper.ensureCustomerInBackend(user!!)
             }
         }
         setResult(resultCode, data)

@@ -1,86 +1,177 @@
 package com.carko.carko;
 
 import android.Manifest;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carko.carko.controllers.EventClient;
-import com.carko.carko.models.Event;
+import com.carko.carko.models.Customer;
 import com.carko.carko.models.Parking;
 import com.carko.carko.views.SlideView;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-public class EventMapActivity extends AppCompatActivity
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+
+public class MapActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
-        GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMarkerClickListener,
+        NavigationView.OnNavigationItemSelectedListener{
 
-    private String TAG = "APYA - " + EventMapActivity.class.getSimpleName();
+    private final String TAG = "APYA - " + MapActivity.class.getSimpleName();
     private final int PERMISSIONS_REQUEST_CODE = 111;
-
-    private View container;
-    private SlideView slideView;
-    private Event event;
-
-    private GoogleMap mMap;
-    private Circle eventRadius;
-    private Marker activeMarker;
-
     private final int COLOR_CIRCLE_INACTIVE = 0x33ff0000;
     private final int COLOR_CIRCLE_ACTIVE = 0x66ff0000;
     private final int MARKER_DRAWABLE = R.drawable.marker_68;
 
+    private View container;
+    private SlideView slideView;
+    private NavigationView navigationView;
+//    private Event event;
+
+    private GoogleMap mMap;
+//    private Circle eventRadius;
+    private Marker activeMarker;
+
+    private Function1<Customer, Unit> mAuthListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_map);
+        setContentView(R.layout.activity_map);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        // Enable up button
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+        // Drawer
+        DrawerLayout drawer = findViewById(R.id.map_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        container = findViewById(R.id.event_map_container);
+        // Navigation view
+        // TODO create custom layout for
+        navigationView = findViewById(R.id.map_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
+        // Enable up button
+//        ActionBar actionbar = getSupportActionBar();
+//        actionbar.setDisplayHomeAsUpEnabled(true);
+
+        container = findViewById(R.id.map_container);
         slideView = findViewById(R.id.slide_view);
 
         // Get event
-        Intent intent = getIntent();
-        event = intent.getParcelableExtra(EventViewHolder.EXTRA_EVENT);
-        Toast.makeText(this, event.getLabel(), Toast.LENGTH_SHORT).show();
+//        Intent intent = getIntent();
+//        event = intent.getParcelableExtra(EventViewHolder.EXTRA_EVENT);
+//        Toast.makeText(this, event.getLabel(), Toast.LENGTH_SHORT).show();
+
+        mAuthListener = new Function1<Customer, Unit>() {
+            @Override
+            public Unit invoke(Customer customer) {
+                Log.i(TAG, "listener - Listener notified in MapActivity!");
+                if (customer != null) {
+                    Log.i(TAG, "mAuthListener - Customer logged in from MapActivity!");
+                    View header = navigationView.getHeaderView(0);
+                    TextView displayName = header.findViewById(R.id.display_name);
+                    displayName.setText(customer.getDisplayName());
+                } else {
+                    Log.i(TAG, "mAuthListener - Customer logged out from MapActivity!");
+                    View header = navigationView.getHeaderView(0);
+                    TextView displayName = header.findViewById(R.id.display_name);
+                    displayName.setText("Android Studio");
+                }
+                return null;
+            }
+        };
 
         loadMapAsync();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AuthenticationHelper.INSTANCE.removeAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AuthenticationHelper.INSTANCE.addAuthStateListener(mAuthListener);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (AuthenticationHelper.INSTANCE.customerAvailable()) {
+            Toast.makeText(this, "User already logged in!", Toast.LENGTH_SHORT).show();
+            Customer customer = AuthenticationHelper.INSTANCE.getCustomer();
+            if (customer != null) {
+                Log.i(TAG, customer.toJson().toString());
+            } else {
+                Log.e(TAG, "Customer not properly saved!");
+            }
+        } else {
+            AuthenticationHelper.INSTANCE.login(this);
+            return true;
+        }
+
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.item_payment) {
+            // open stripe view
+            // philibert
+        } else if (id == R.id.item_vehicule) {
+            // open custom activity
+            // mario
+        } else if (id == R.id.item_history) {
+            // open custom activity
+            //
+        } else if (id == R.id.item_help) {
+            // open mail
+            //
+        } else if (id == R.id.item_rent) {
+            // open custom activity
+            // rough
+        } else if (id == R.id.item_payout) {
+            // open custom activity
+        }
+
+        DrawerLayout drawer = findViewById(R.id.event_grid_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void loadMapAsync() {
@@ -93,24 +184,24 @@ public class EventMapActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         Log.i(TAG, "onMapReady");
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(event.getPos()));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPos(), 14.0f));
-        EventClient.getEventParkings(event, new EventClient.Complete<ArrayList<Parking>>() {
-            @Override
-            public void onComplete(ArrayList<Parking> response, String e) {
-                if (e == null) {
-                    Log.i(TAG, "getEventParkings: " + response.toString());
-                    EventMapActivity.this.addParkings(response);
-                } else {
-                    Log.e(TAG, "getEventParkings: " + e);
-                }
-            }
-        });
-        eventRadius = mMap.addCircle(new CircleOptions()
-            .center(event.getPos())
-            .radius(event.getRange())
-            .strokeColor(Color.TRANSPARENT)
-            .fillColor(COLOR_CIRCLE_INACTIVE));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(event.getPos()));
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPos(), 14.0f));
+//        EventClient.getEventParkings(event, new EventClient.Complete<ArrayList<Parking>>() {
+//            @Override
+//            public void onComplete(ArrayList<Parking> response, String e) {
+//                if (e == null) {
+//                    Log.i(TAG, "getEventParkings: " + response.toString());
+//                    MapActivity.this.addParkings(response);
+//                } else {
+//                    Log.e(TAG, "getEventParkings: " + e);
+//                }
+//            }
+//        });
+//        eventRadius = mMap.addCircle(new CircleOptions()
+//            .center(event.getPos())
+//            .radius(event.getRange())
+//            .strokeColor(Color.TRANSPARENT)
+//            .fillColor(COLOR_CIRCLE_INACTIVE));
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
@@ -120,7 +211,7 @@ public class EventMapActivity extends AppCompatActivity
         Log.i(TAG, "onMapClick");
         slideView.setVisibility(View.INVISIBLE);
         slideView.invalidate();
-        eventRadius.setFillColor(COLOR_CIRCLE_INACTIVE);
+//        eventRadius.setFillColor(COLOR_CIRCLE_INACTIVE);
         resetActiveMarker();
     }
 
@@ -133,17 +224,17 @@ public class EventMapActivity extends AppCompatActivity
         slideView.setVisibility(View.VISIBLE);
         slideView.invalidate();
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ParkingDescFragment fragment = new ParkingDescFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ParkingDescFragment.Companion.getEVENT_KEY(), event);
-        bundle.putParcelable(ParkingDescFragment.Companion.getPARKING_KEY(), parking);
-        fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.card_view, fragment);
-        fragmentTransaction.commit();
+//        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        ParkingDescFragment fragment = new ParkingDescFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(ParkingDescFragment.Companion.getEVENT_KEY(), event);
+//        bundle.putParcelable(ParkingDescFragment.Companion.getPARKING_KEY(), parking);
+//        fragment.setArguments(bundle);
+//        fragmentTransaction.replace(R.id.card_view, fragment);
+//        fragmentTransaction.commit();
 
-        eventRadius.setFillColor(COLOR_CIRCLE_ACTIVE);
+//        eventRadius.setFillColor(COLOR_CIRCLE_ACTIVE);
 
         return false;
     }
@@ -219,7 +310,7 @@ public class EventMapActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view) {
                         // Request permission.
-                        ActivityCompat.requestPermissions(EventMapActivity.this,
+                        ActivityCompat.requestPermissions(MapActivity.this,
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                 PERMISSIONS_REQUEST_CODE);
                     }

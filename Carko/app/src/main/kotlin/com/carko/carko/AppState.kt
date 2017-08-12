@@ -43,7 +43,7 @@ object AppState {
 
             val data = preferences.getString(USER_KEY, null)
             Log.i(TAG, "data: " + data)
-            if (data != null && data != "{}") {
+            if (data != null) {
                 val cachedCustomer = JSONObject(data)
                 val customer = Customer(cachedCustomer)
                 this.customer = customer

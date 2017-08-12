@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.carko.carko.MainActivity"
+    tools:context="com.carko.carko.EventGridActivity"
     tools:showIn="@layout/app_bar_main">
 
     <android.support.v7.widget.RecyclerView
@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:clipToPadding="false"
-        android:padding="@dimen/event_offset"
-        android:layout_below="@+id/error_message"/>
+        android:padding="@dimen/event_offset" />
 
 </RelativeLayout>

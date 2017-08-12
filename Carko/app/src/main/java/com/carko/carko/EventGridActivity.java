@@ -13,6 +13,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carko.carko.controllers.EventClient;
@@ -26,21 +28,27 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+
+public class EventGridActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "APYA - " + MainActivity.class.getSimpleName();
+    private static final String TAG = "APYA - " + EventGridActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 3235;
 
     private ArrayList<Event> eventList;
 
+    private Function1<Customer, Unit> mAuthListener;
+
     private RecyclerView recyclerView;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO: Cache events onPause and use them instead of calling API again
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_event_grid);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -48,15 +56,17 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // Drawer
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.event_grid_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         // Navigation view
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        // TODO create custom layout for
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
 
         // Events view
         recyclerView = findViewById(R.id.eventsRecyclerView);
@@ -67,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.addItemDecoration(eventDecoration);
 
         eventList = new ArrayList<>();
-        EventAdapter adapter = new EventAdapter(MainActivity.this, eventList);
+        EventAdapter adapter = new EventAdapter(EventGridActivity.this, eventList);
         recyclerView.setAdapter(adapter);
 
         Event.getAllEvents(new EventClient.Complete<ArrayList<Event>>() {
@@ -88,11 +98,42 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
+        mAuthListener = new Function1<Customer, Unit>() {
+            @Override
+            public Unit invoke(Customer customer) {
+                Log.i(TAG, "listener - Listener notified in EventGridActivity!");
+                if (customer != null) {
+                    Log.i(TAG, "mAuthListener - Customer logged in from EventGridActivity!");
+                    View header = navigationView.getHeaderView(0);
+                    TextView displayName = header.findViewById(R.id.display_name);
+                    displayName.setText(customer.getDisplayName());
+                } else {
+                    Log.i(TAG, "mAuthListener - Customer logged out from EventGridActivity!");
+                    View header = navigationView.getHeaderView(0);
+                    TextView displayName = header.findViewById(R.id.display_name);
+                    displayName.setText("Android Studio");
+                }
+                return null;
+            }
+        };
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AuthenticationHelper.INSTANCE.removeAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AuthenticationHelper.INSTANCE.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.event_grid_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -128,33 +169,33 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "FirebaseUser: " + user.getDisplayName());
             }
         } else {
-            AuthenticationHelper.UI.INSTANCE.startLogin(this);
+            AuthenticationHelper.INSTANCE.login(this);
             return true;
         }
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_payment) {
+        if (id == R.id.item_payment) {
             // open stripe view
             // philibert
-        } else if (id == R.id.nav_vehicule) {
+        } else if (id == R.id.item_vehicule) {
             // open custom activity
             // mario
-        } else if (id == R.id.nav_history) {
+        } else if (id == R.id.item_history) {
             // open custom activity
             //
-        } else if (id == R.id.nav_help) {
+        } else if (id == R.id.item_help) {
             // open mail
             //
-        } else if (id == R.id.nav_rent) {
+        } else if (id == R.id.item_rent) {
             // open custom activity
             // rough
-        } else if (id == R.id.nav_payout) {
+        } else if (id == R.id.item_payout) {
             // open custom activity
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.event_grid_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

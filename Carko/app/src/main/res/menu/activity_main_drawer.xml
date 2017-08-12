@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_payment"
+            android:id="@+id/item_payment"
             android:icon="@drawable/bank_cards_32"
-            android:title="@string/menu_item_payment" />
+            android:title="@string/menu_item_payment"/>
         <item
-            android:id="@+id/nav_vehicule"
+            android:id="@+id/item_vehicule"
             android:icon="@drawable/car_32"
             android:title="@string/menu_item_vehicule" />
         <item
-            android:id="@+id/nav_history"
+            android:id="@+id/item_history"
             android:icon="@drawable/order_history_32"
             android:title="@string/menu_item_history" />
         <item
-            android:id="@+id/nav_help"
+            android:id="@+id/item_help"
             android:icon="@drawable/help_32"
             android:title="@string/menu_item_help" />
     </group>
 
-    <item android:title="@string/menu_group_parking">
+    <item
+        android:id="@+id/submenu_parking"
+        android:title="@string/menu_group_parking" >
         <menu>
             <item
-                android:id="@+id/nav_rent"
+                android:id="@+id/item_rent"
                 android:icon="@drawable/medium_priority_32"
                 android:title="@string/menu_item_rent" />
             <item
-                android:id="@+id/nav_payout"
+                android:id="@+id/item_payout"
                 android:icon="@drawable/request_money_32"
                 android:title="@string/menu_item_payout" />
         </menu>

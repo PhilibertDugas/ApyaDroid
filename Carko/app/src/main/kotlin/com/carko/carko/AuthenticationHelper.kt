@@ -4,16 +4,53 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import com.carko.carko.models.Customer
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by fabrice on 2017-07-30.
  */
 object AuthenticationHelper {
     val TAG = "APYA - AuthHelper"
+    val RC_SIGN_IN = 3235
+
+    val authStateListeners = ArrayList<(customer: Customer?) -> Unit>()
+
+    fun addAuthStateListener(listener: (customer: Customer?) -> Unit) {
+        authStateListeners.add(listener)
+        listener(getCustomer())
+    }
+
+    fun removeAuthStateListener(listener: (customer: Customer?) -> Unit) {
+        var i = 0
+        var found = false
+        while (!found && i < authStateListeners.size) {
+            val l = authStateListeners[i]
+            if (l == listener) {
+                Log.i(TAG, "removeAuthStateListener() - removing listener")
+                authStateListeners.removeAt(i)
+                found = true
+            }
+            i++
+        }
+        if (!found) {
+            Log.e(TAG, "removeAuthStateListener() - listener not found!")
+        }
+    }
+
+    private fun notifyListeners(customer: Customer?) {
+        authStateListeners.forEach { l -> l(customer) }
+    }
+
+    fun login(activity: Activity) {
+        val intent = Intent(activity, LoginActivity::class.java)
+        activity.startActivityForResult(intent, RC_SIGN_IN)
+    }
+
+    fun logout() {
+
+    }
 
     fun customerLoggedIn(customer: Customer) {
         updateAuthToken({ error ->
@@ -23,7 +60,7 @@ object AuthenticationHelper {
             }
             AppState.cacheCustomer(customer)
             Log.i(TAG, "Customer logged in!")
-            // TODO Notify observers
+            notifyListeners(customer)
         })
     }
 
@@ -44,11 +81,6 @@ object AuthenticationHelper {
         AppState.cacheCustomer(customer)
     }
 
-    // This should only be called is customerAvailable() returns true
-    fun getAuthToken(): String? {
-        return AppState.cachedToken()
-    }
-
     fun resetCustomer() {
         try {
             // TODO Do FB too
@@ -58,6 +90,11 @@ object AuthenticationHelper {
         } catch (exception: Exception) {
             Log.e(TAG, exception.toString())
         }
+    }
+
+    // This should only be called is customerAvailable() returns true
+    fun getAuthToken(): String? {
+        return AppState.cachedToken()
     }
 
     fun updateAuthToken(complete: (Error?) -> Unit) {
@@ -104,26 +141,6 @@ object AuthenticationHelper {
             } else if (customer != null){
                 AuthenticationHelper.customerLoggedIn(customer)
             }
-        }
-    }
-
-    object UI {
-        val RC_SIGN_IN = 3235
-
-        private fun getAuthUI(): Intent {
-            val providers = Arrays.asList<AuthUI.IdpConfig>(
-                    AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                    AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-            )
-            return AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .setTheme(R.style.LoginTheme)
-                    .build()
-        }
-
-        fun startLogin(activity: Activity) {
-            activity.startActivityForResult(getAuthUI(), RC_SIGN_IN)
         }
     }
 }

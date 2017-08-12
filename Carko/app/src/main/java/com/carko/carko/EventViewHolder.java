@@ -35,7 +35,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder
     @Override
     public void onClick(View view) {
         Context context = view.getContext();
-        Intent intent = new Intent(context, EventMapActivity.class);
+        Intent intent = new Intent(context, MapActivity.class);
         intent.putExtra(EventViewHolder.EXTRA_EVENT, this.event);
         context.startActivity(intent);
     }
