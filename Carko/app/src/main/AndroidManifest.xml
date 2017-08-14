@@ -23,17 +23,16 @@
 
         <activity
             android:name=".EventGridActivity"
-            android:label="@string/title_activity_main">
-        </activity>
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_event_map"
+            android:label="@string/title_activity_map"
             android:theme="@style/AppTheme">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value="com.carko.carko.EventGridActivity" />-->
+            <!-- <meta-data -->
+            <!-- android:name="android.support.PARENT_ACTIVITY" -->
+            <!-- android:value="com.carko.carko.EventGridActivity" /> -->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +43,23 @@
         <activity
             android:name=".ReservationDialog"
             android:theme="@style/ReservationDialog" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RentActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carko.carko.MapActivity" />
+        </activity>
+        <activity
+            android:name=".ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AddParkingMapActivity"
+            android:label="@string/title_activity_add_parking_map">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carko.carko.RentActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.carko.carko.models.Customer;
 import com.carko.carko.models.Parking;
 import com.carko.carko.views.SlideView;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -116,7 +117,10 @@ public class MapActivity extends AppCompatActivity
             }
         };
 
-        loadMapAsync();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -144,7 +148,7 @@ public class MapActivity extends AppCompatActivity
             }
         } else {
             AuthenticationHelper.INSTANCE.login(this);
-            return true;
+            return false;
         }
 
         // Handle navigation view item clicks here.
@@ -163,45 +167,23 @@ public class MapActivity extends AppCompatActivity
             // open mail
             //
         } else if (id == R.id.item_rent) {
-            // open custom activity
-            // rough
+            Intent intent = new Intent(this, RentActivity.class);
+            startActivity(intent);
         } else if (id == R.id.item_payout) {
             // open custom activity
         }
 
-        DrawerLayout drawer = findViewById(R.id.event_grid_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.map_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void loadMapAsync() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.i(TAG, "onMapReady");
         mMap = googleMap;
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(event.getPos()));
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPos(), 14.0f));
-//        EventClient.getEventParkings(event, new EventClient.Complete<ArrayList<Parking>>() {
-//            @Override
-//            public void onComplete(ArrayList<Parking> response, String e) {
-//                if (e == null) {
-//                    Log.i(TAG, "getEventParkings: " + response.toString());
-//                    MapActivity.this.addParkings(response);
-//                } else {
-//                    Log.e(TAG, "getEventParkings: " + e);
-//                }
-//            }
-//        });
-//        eventRadius = mMap.addCircle(new CircleOptions()
-//            .center(event.getPos())
-//            .radius(event.getRange())
-//            .strokeColor(Color.TRANSPARENT)
-//            .fillColor(COLOR_CIRCLE_INACTIVE));
+        LatLng mtlPos = new LatLng(45.5017, -73.5673);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mtlPos, 12.0f));
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
     }
@@ -211,7 +193,6 @@ public class MapActivity extends AppCompatActivity
         Log.i(TAG, "onMapClick");
         slideView.setVisibility(View.INVISIBLE);
         slideView.invalidate();
-//        eventRadius.setFillColor(COLOR_CIRCLE_INACTIVE);
         resetActiveMarker();
     }
 
@@ -224,6 +205,7 @@ public class MapActivity extends AppCompatActivity
         slideView.setVisibility(View.VISIBLE);
         slideView.invalidate();
 
+        // TODO Fix this
 //        FragmentManager fragmentManager = getFragmentManager();
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //        ParkingDescFragment fragment = new ParkingDescFragment();
@@ -336,7 +318,7 @@ public class MapActivity extends AppCompatActivity
                 }
             } else {
                 Log.i(TAG, "Permission granted");
-                loadMapAsync();
+                // Do something?
             }
         }
     }

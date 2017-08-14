@@ -3,6 +3,7 @@ package com.carko.carko
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
@@ -14,6 +15,7 @@ import java.util.Arrays
 
 class LoginActivity : AppCompatActivity() {
 
+    private val TAG = "APYA - LoginActivity"
     private val RC_SIGN_IN = 3235
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == ResultCodes.OK) {
                 // Successfully signed in
+                Log.i(TAG, "User signed in.")
                 val user = FirebaseAuth.getInstance().currentUser
                 AuthenticationHelper.ensureCustomerInBackend(user!!)
             }
