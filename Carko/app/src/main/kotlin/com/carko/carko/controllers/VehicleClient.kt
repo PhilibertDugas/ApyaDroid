@@ -4,16 +4,16 @@ import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.carko.carko.AuthenticationHelper
-import com.carko.carko.models.Vehicule
+import com.carko.carko.models.Vehicle
 import org.json.JSONException
 
 /**
  * Created by fabrice on 2017-08-10.
  */
-object VehiculeClient {
-    val TAG = "APYA - VehiculeClient"
+object VehicleClient {
+    val TAG = "APYA - VehicleClient"
 
-    fun postVehicule(vehicule: Vehicule, complete: (Vehicule?, Error?) -> Unit) {
+    fun postVehicule(vehicle: Vehicle, complete: (Vehicle?, Error?) -> Unit) {
         if (!AuthenticationHelper.customerAvailable()) {
             Log.e(TAG, "Customer is not available!")
             return
@@ -24,24 +24,24 @@ object VehiculeClient {
                 .appendPath(AuthenticationHelper.getCustomer()?.id.toString())
                 .appendPath("vehicules")
         val vehiculeUrl = uriBuilder.build()
-        val body = vehicule.toJson()
+        val body = vehicle.toJson()
         Log.i(TAG, "postVehicule() - url: %s".format(vehiculeUrl.toString()))
         val request = object: JsonObjectRequest(
                 Request.Method.POST,
                 vehiculeUrl.toString(),
                 body,
                 { response ->
-                    Log.i(this@VehiculeClient.TAG, "Response: " + response.toString())
-                    var result: Vehicule? = null
+                    Log.i(this@VehicleClient.TAG, "Response: " + response.toString())
+                    var result: Vehicle? = null
                     var error: Error? = null
                     try {
-                        result = Vehicule(response)
+                        result = Vehicle(response)
                     } catch (e: JSONException) {
                         error = Error(e.toString(), e)
                     }
                     complete(result, error)
                 }, { error ->
-                    Log.e(this@VehiculeClient.TAG, "Error: " + error.toString())
+                    Log.e(this@VehicleClient.TAG, "Error: " + error.toString())
                     error.printStackTrace()
                     complete(null, Error(error.toString(), error))
                 }) {
@@ -53,14 +53,14 @@ object VehiculeClient {
         ApiClient.getInstance().addRequest(request)
     }
 
-    fun updateVehicule(vehicule: Vehicule, complete: (Error?) -> Unit) {
+    fun updateVehicule(vehicle: Vehicle, complete: (Error?) -> Unit) {
         if (!AuthenticationHelper.customerAvailable()) {
             Log.e(TAG, "Customer is not available!")
             return
         }
 
-        if (vehicule.id == null) {
-            Log.e(TAG, "Invalid vehicule update!")
+        if (vehicle.id == null) {
+            Log.e(TAG, "Invalid vehicle update!")
             return
         }
 
@@ -69,19 +69,19 @@ object VehiculeClient {
         uriBuilder.appendPath("customers")
                 .appendPath(AuthenticationHelper.getCustomer()?.id.toString())
                 .appendPath("vehicules")
-                .appendPath(vehicule.id.toString())
+                .appendPath(vehicle.id.toString())
         val vehiculeUrl = uriBuilder.build()
-        val body = vehicule.toJson()
+        val body = vehicle.toJson()
         Log.i(TAG, "updateVehicule() - url: %s".format(vehiculeUrl.toString()))
         val request = object: JsonObjectRequest(
                 Request.Method.PATCH,
                 vehiculeUrl.toString(),
                 body,
                 { response ->
-                    Log.i(this@VehiculeClient.TAG, "Response: " + response.toString())
+                    Log.i(this@VehicleClient.TAG, "Response: " + response.toString())
                     complete(null)
                 }, { error ->
-                    Log.e(this@VehiculeClient.TAG, "Error: " + error.toString())
+                    Log.e(this@VehicleClient.TAG, "Error: " + error.toString())
                     error.printStackTrace()
                     complete(Error(error.toString(), error))
                 }) {

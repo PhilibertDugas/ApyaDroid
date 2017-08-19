@@ -171,6 +171,8 @@ public class MapActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.item_payout) {
             // open custom activity
+            Intent intent = new Intent(this, BankAccountActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.map_drawer_layout);

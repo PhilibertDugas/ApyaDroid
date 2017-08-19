@@ -25,7 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/dummy_parking_address"
         android:id="@+id/marker_info_address"
         android:layout_alignTop="@+id/marker_info_icon"
         android:layout_toEndOf="@+id/marker_info_icon"

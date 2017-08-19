@@ -1,18 +1,18 @@
 package com.carko.carko.models
 
-import com.carko.carko.controllers.VehiculeClient
+import com.carko.carko.controllers.VehicleClient
 import org.json.JSONObject
 
 /**
  * Created by fabrice on 2017-07-29.
  */
-class Vehicule(var license: String,
-               var make: String,
-               var model: String,
-               var year: String,
-               var color: String,
-               var province: String,
-               var id: Int?): Model {
+class Vehicle(var license: String,
+              var make: String,
+              var model: String,
+              var year: String,
+              var color: String,
+              var province: String,
+              var id: Int?): Model {
 
     constructor(json: JSONObject): this(
             json.getString("license"),
@@ -36,11 +36,11 @@ class Vehicule(var license: String,
         return json
     }
 
-    fun persist(complete: (Vehicule?, Error?) -> Unit) {
-        VehiculeClient.postVehicule(this, complete)
+    fun persist(complete: (Vehicle?, Error?) -> Unit) {
+        VehicleClient.postVehicule(this, complete)
     }
 
     fun update(complete: (Error?) -> Unit) {
-        VehiculeClient.updateVehicule(this, complete)
+        VehicleClient.updateVehicule(this, complete)
     }
 }

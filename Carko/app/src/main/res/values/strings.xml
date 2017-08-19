@@ -13,12 +13,12 @@
 
     <!-- Drawer menu -->
     <string name="menu_item_payment">Payment</string>
-    <string name="menu_item_vehicule">Vehicule</string>
+    <string name="menu_item_vehicule">Vehicle</string>
     <string name="menu_item_history">History</string>
     <string name="menu_item_help">Help</string>
     <string name="menu_group_parking">Parking</string>
     <string name="menu_item_rent">Rent your space</string>
-    <string name="menu_item_payout">Payout</string>
+    <string name="menu_item_payout">Transaction Information</string>
 
     <!-- Map Activity -->
     <string name="title_activity_map">MapActivity</string>
@@ -32,6 +32,12 @@
     <string name="ask_again">Ask again</string>
     <string name="settings">Settings</string>
     <string name="reserve_now">Reserve Now</string>
+
+    <!-- Parking description -->
+    <string name="fragment_parking_desc_more_photos">More photos</string>
+    <string name="fragment_parking_desc_availability">Availability</string>
+    <string name="fragment_parking_desc_until">Until:</string>
+    <string name="fragment_parking_desc_description">Description</string>
 
     <!-- Rent your space flow -->
     <string name="rent_header">Rent your space</string>
@@ -49,17 +55,17 @@
     <string name="title_activity_credit_card">Add a Card</string>
     <string name="email_hint">Email</string>
     <string name="action_done">Done</string>
-
-    <!-- Parking list -->
-    <string name="dummy_parking_address">3235 avenue de la malbaie</string>
-    <string name="parking_availability_tag">Availability:</string>
-    <string name="dummy_parking_availability_time">days</string>
-
-    <!-- Parking description -->
-    <string name="fragment_parking_desc_more_photos">More photos</string>
-    <string name="fragment_parking_desc_availability">Availability</string>
-    <string name="fragment_parking_desc_until">Until:</string>
-    <string name="fragment_parking_desc_description">Description</string>
+    
+    <!-- Bank Account -->
+    <string name="title_activity_bank_account">Transaction Information</string>
+    <string name="bank_account_explanation">To receive payment, please enter the following information.</string>
+    <string name="bank_account_address_hint">Address</string>
+    <string name="bank_account_city_hint">City</string>
+    <string name="bank_account_province_hint">Province</string>
+    <string name="bank_account_postal_hint">Postal Code</string>
+    <string name="bank_account_country_hint">Country</string>
+    <string name="bank_account_birth_hint">Date of Birth</string>
+    <string name="bank_account_continue_button">Continue</string>
 
     <!-- Marker info -->
     <string name="marker_info_tap">Tap to continue…</string>

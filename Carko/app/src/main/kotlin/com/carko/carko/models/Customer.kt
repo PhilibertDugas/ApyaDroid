@@ -12,7 +12,7 @@ class Customer(
         var id: Int,
         var firebaseId: String,
         var stripeId: String,
-        var vehicule: Vehicule?,
+        var vehicle: Vehicle?,
         var accountId: String?,
         var externalLast4Digits: String?,
         var externalBankName: String?): Model {
@@ -23,8 +23,8 @@ class Customer(
             json.getInt("id"),
             json.getString("firebase_id"),
             json.getString("stripe_id"),
-            if (json.has("vehicule"))
-                Vehicule(json.getJSONObject("vehicule"))
+            if (json.has("vehicle"))
+                Vehicle(json.getJSONObject("vehicle"))
             else
                 null,
             if (json.has("account_id"))
@@ -48,9 +48,9 @@ class Customer(
         json.put("id", this.id)
         json.put("firebase_id", this.firebaseId)
         json.put("stripe_id", this.stripeId)
-        if (vehicule != null) {
-            json.put("vehicule", this.vehicule?.toJson())
-            json.put("vehicule_id", this.vehicule?.id)
+        if (vehicle != null) {
+            json.put("vehicle", this.vehicle?.toJson())
+            json.put("vehicule_id", this.vehicle?.id)
         }
         if (accountId != null) {
             json.put("account_id", this.accountId)

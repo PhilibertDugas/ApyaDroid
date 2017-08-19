@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context="com.carko.carko.BankAccountActivity">
+
+    <include layout="@layout/app_bar"
+        android:id="@+id/toolbar_include"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_include"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:padding="16dp"
+            android:gravity="center"
+            android:text="@string/bank_account_explanation"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_primary_box"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/bank_account_address_hint"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:inputType="textPostalAddress"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/bank_account_city_hint"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/bank_account_province_hint"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/bank_account_postal_hint"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/bank_account_country_hint"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"/>
+        <EditText
+            android:id="@+id/bank_account_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/bank_account_birth_hint"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/white"
+            android:inputType="none" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:text="@string/bank_account_continue_button"
+            android:background="@drawable/round_corner_button_confirm"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
