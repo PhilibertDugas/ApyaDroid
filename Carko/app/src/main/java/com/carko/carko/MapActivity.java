@@ -139,7 +139,6 @@ public class MapActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (AuthenticationHelper.INSTANCE.customerAvailable()) {
-            Toast.makeText(this, "User already logged in!", Toast.LENGTH_SHORT).show();
             Customer customer = AuthenticationHelper.INSTANCE.getCustomer();
             if (customer != null) {
                 Log.i(TAG, customer.toJson().toString());
@@ -156,7 +155,8 @@ public class MapActivity extends AppCompatActivity
 
         if (id == R.id.item_payment) {
             // open stripe view
-            // philibert
+            Intent intent = new Intent(this, CreditCardActivity.class);
+            startActivity(intent);
         } else if (id == R.id.item_vehicule) {
             // open custom activity
             // mario

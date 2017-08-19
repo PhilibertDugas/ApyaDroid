@@ -6,7 +6,7 @@
     android:padding="8dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.carko.carko.EventGridActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/eventsRecyclerView"

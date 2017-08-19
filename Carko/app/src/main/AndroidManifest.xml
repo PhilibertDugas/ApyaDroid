@@ -50,15 +50,18 @@
                 android:value="com.carko.carko.MapActivity" />
         </activity>
         <activity
-            android:name=".ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".AddParkingMapActivity"
             android:label="@string/title_activity_add_parking_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carko.carko.RentActivity" />
+                android:value="com.carko.carko.MapActivity" />
+        </activity>
+        <activity
+            android:name=".CreditCardActivity"
+            android:label="@string/title_activity_credit_card" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carko.carko.MapActivity" />
         </activity>
     </application>
 

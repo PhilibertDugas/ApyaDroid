@@ -54,10 +54,10 @@ public class ParkingInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         // TODO: Replace placeholders with real information
         //Parking parking = (Parking) marker.getTag();
 
-        ((ImageView) view.findViewById(R.id.marker_info_icon)).setImageResource(R.drawable.pacman);
+        ((ImageView) view.findViewById(R.id.marker_info_icon)).setImageResource(R.drawable.placeholder);
         String title = marker.getTitle();
 
-        TextView titleUi = ((TextView) view.findViewById(R.id.marker_info_address));
+        TextView titleUi = view.findViewById(R.id.marker_info_address);
         if (title != null) {
             // Spannable string allows us to edit the formatting of the text.
             SpannableString titleText = new SpannableString(title);
