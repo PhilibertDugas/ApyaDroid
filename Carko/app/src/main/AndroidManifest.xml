@@ -56,7 +56,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carko.carko.MapActivity" />
         </activity>
-        <activity android:name=".BankAccountActivity"></activity>
+        <activity android:name=".BankAccountActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carko.carko.MapActivity" />
+        </activity>
     </application>
 
 </manifest>
