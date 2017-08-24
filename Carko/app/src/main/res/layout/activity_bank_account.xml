@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context="com.carko.carko.BankAccountActivity">
+    tools:context="com.carko.carko.context.BankAccountActivity">
 
     <include layout="@layout/app_bar"
         android:id="@+id/toolbar_include"/>

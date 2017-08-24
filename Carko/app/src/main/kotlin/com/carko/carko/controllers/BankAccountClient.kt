@@ -21,17 +21,12 @@ object BankAccountClient {
             return
         }
 
-        val tosAcceptance = JSONObject()
         val ip = Utils.getDeviceIPAddress(true)
-        tosAcceptance.put("date", Math.round(System.currentTimeMillis()/1000.0f))
-        tosAcceptance.put("ip", ip)
-
         val accountJson = JSONObject()
-        accountJson.put("legal_entity", account.toJson())
-        accountJson.put("tos_acceptance", tosAcceptance)
-
-        val parameters = JSONObject()
-        parameters.put("account", accountJson)
+                .put("legal_entity", account.toJson())
+                .put("tos_acceptance", JSONObject().put("ip", ip))
+                        .put("date", Math.round(System.currentTimeMillis()/1000.0f))
+        val parameters = JSONObject().put("account", accountJson)
 
         val baseUrl = ApiClient.getInstance().baseUrl
         val url = baseUrl.buildUpon()
@@ -51,7 +46,6 @@ object BankAccountClient {
             Log.e(TAG, "postAccount() - error: %s".format(error.toString()))
             complete(Error(String(error.networkResponse.data)))
         }) {
-
             override fun getHeaders(): MutableMap<String, String> {
                 return ApiClient.getInstance().authHeaders
             }
@@ -60,11 +54,7 @@ object BankAccountClient {
     }
 
     fun postExternalAccount(token: String, complete: (Error?) -> Unit) {
-        val tokenJson = JSONObject()
-        tokenJson.put("token", token)
-
-        val parameters = JSONObject()
-        parameters.put("external", tokenJson)
+        val parameters = JSONObject().put("external", JSONObject().put("token", token))
 
         val baseUrl = ApiClient.getInstance().baseUrl
         val url = baseUrl.buildUpon()

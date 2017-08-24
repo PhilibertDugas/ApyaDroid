@@ -1,4 +1,4 @@
-package com.carko.carko
+package com.carko.carko.context
 
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -6,12 +6,11 @@ import android.icu.util.Calendar
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.SupportActivity
 import android.text.Editable
 import android.util.Log
-import android.view.View
 import kotlinx.android.synthetic.main.app_bar.*
 import android.widget.DatePicker
+import com.carko.carko.R
 import kotlinx.android.synthetic.main.activity_bank_account.*
 
 

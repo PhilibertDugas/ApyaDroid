@@ -1,4 +1,4 @@
-package com.carko.carko
+package com.carko.carko.context
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.carko.carko.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback

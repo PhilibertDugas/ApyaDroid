@@ -1,10 +1,11 @@
-package com.carko.carko
+package com.carko.carko.context
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.carko.carko.R
 import kotlinx.android.synthetic.main.app_bar.toolbar
 
 class CreditCardActivity : AppCompatActivity() {

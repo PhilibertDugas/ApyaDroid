@@ -1,7 +1,8 @@
-package com.carko.carko
+package com.carko.carko.context
 
 import android.app.Activity
 import android.os.Bundle
+import com.carko.carko.R
 
 import kotlinx.android.synthetic.main.reservation_dialog.*
 

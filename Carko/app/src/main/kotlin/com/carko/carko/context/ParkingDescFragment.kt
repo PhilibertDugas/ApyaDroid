@@ -1,4 +1,4 @@
-package com.carko.carko
+package com.carko.carko.context
 
 import android.app.Fragment
 import android.content.Intent
@@ -15,6 +15,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.carko.carko.R
+import com.carko.carko.RoundedCornersTransformation
 import com.carko.carko.models.Event
 import com.carko.carko.models.Parking
 import com.firebase.ui.auth.AuthUI

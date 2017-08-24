@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.carko.carko.ApyaApp;
+import com.carko.carko.context.ApyaApp;
 import com.carko.carko.AuthenticationHelper;
 
 import java.util.HashMap;

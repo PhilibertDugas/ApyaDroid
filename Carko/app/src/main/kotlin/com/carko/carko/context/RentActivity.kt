@@ -1,8 +1,9 @@
-package com.carko.carko
+package com.carko.carko.context
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.carko.carko.R
 import kotlinx.android.synthetic.main.activity_rent.*
 import kotlinx.android.synthetic.main.content_rent.*
 

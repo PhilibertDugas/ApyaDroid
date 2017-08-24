@@ -55,7 +55,7 @@
     <string name="title_activity_credit_card">Add a Card</string>
     <string name="email_hint">Email</string>
     <string name="action_done">Done</string>
-    
+
     <!-- Bank Account -->
     <string name="title_activity_bank_account">Transaction Information</string>
     <string name="bank_account_explanation">To receive payment, please enter the following information.</string>
@@ -66,6 +66,9 @@
     <string name="bank_account_country_hint">Country</string>
     <string name="bank_account_birth_hint">Date of Birth</string>
     <string name="bank_account_continue_button">Continue</string>
+    <string name="bank_info_stripe_message">
+        Apya does not store or share any banking information.
+        All banking information is communicated through Stripe.</string>
 
     <!-- Marker info -->
     <string name="marker_info_tap">Tap to continue…</string>

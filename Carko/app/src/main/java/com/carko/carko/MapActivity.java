@@ -21,8 +21,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.carko.carko.context.BankAccountActivity;
+import com.carko.carko.context.CreditCardActivity;
+import com.carko.carko.context.RentActivity;
 import com.carko.carko.models.Customer;
 import com.carko.carko.models.Parking;
 import com.carko.carko.views.SlideView;

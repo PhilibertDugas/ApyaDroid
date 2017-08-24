@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/city_boulevard_min"
-    tools:context="com.carko.carko.RentActivity">
+    tools:context="com.carko.carko.context.RentActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

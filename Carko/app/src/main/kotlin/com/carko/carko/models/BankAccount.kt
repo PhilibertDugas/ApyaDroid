@@ -19,10 +19,12 @@ class BankAccount(
 
     override fun toJson(): JSONObject {
         val json = JSONObject()
-        json.put("first_name", firstName)
-        json.put("last_name", lastName)
-        json.put("address", address.toJson())
-        json.put("dob", dob.toJson())
+                .put("first_name", firstName)
+                .put("last_name", lastName)
+                .put("address", address.toJson())
+                .put("dob", dob.toJson())
+                .put("type", type)
+                .put("personal_id_number", personalIdNumber)
         return json
     }
 
@@ -45,10 +47,10 @@ class BankAccount(
 
         override fun toJson(): JSONObject {
             val json = JSONObject()
-            json.put("city", city)
-            json.put("line1", line1)
-            json.put("postal_code", postalCode)
-            json.put("state", state)
+                    .put("city", city)
+                    .put("line1", line1)
+                    .put("postal_code", postalCode)
+                    .put("state", state)
             return json
         }
     }
@@ -60,9 +62,9 @@ class BankAccount(
 
         override fun toJson(): JSONObject {
             val json = JSONObject()
-            json.put("day", day)
-            json.put("month", month)
-            json.put("year", year)
+                    .put("day", day)
+                    .put("month", month)
+                    .put("year", year)
             return json
         }
     }
