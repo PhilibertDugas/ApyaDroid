@@ -30,12 +30,14 @@
             android:gravity="center"/>
 
         <EditText
+            android:id="@+id/bank_info_routing_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="@string/bank_information_routing_number_hint"/>
 
         <EditText
+            android:id="@+id/bank_info_account_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bank_information_account_number_hint"/>
@@ -47,6 +49,7 @@
             android:src="@drawable/check_english"/>
 
         <Button
+            android:id="@+id/bank_info_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

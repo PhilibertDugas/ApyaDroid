@@ -62,6 +62,12 @@ class Customer(
         return json
     }
 
+    val firstName: String
+        get() = displayName.split(' ', limit=1).first()
+
+    val lastName: String
+        get() = displayName.split(' ', limit=1).last()
+
     companion object {
         fun getCustomer(complete: (Customer?, Error?) -> Unit) {
             CustomerClient.getCustomer(complete)

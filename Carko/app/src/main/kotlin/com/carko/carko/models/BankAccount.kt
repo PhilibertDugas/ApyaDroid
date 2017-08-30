@@ -36,7 +36,6 @@ class BankAccount(
         fun associateExternalAccount(token: String, complete: (Error?) -> Unit) {
             BankAccountClient.postExternalAccount(token, complete)
         }
-
     }
 
     class AccountAddress(

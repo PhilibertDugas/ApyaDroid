@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.activity_bank_account.*
 
 class BankAccountActivity : AppCompatActivity() {
 
-    val TAG = "APYA - BankAccountActivity"
-    val BUNDLE_KEY = "bank_acount_info"
+    val TAG = "APYA - BankAccActivity"
+    val BUNDLE_KEY = "bank_account_info"
 
     val validityChecks = HashMap<String, Boolean>()
 
@@ -32,12 +32,15 @@ class BankAccountActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         bank_account_continue_button.setOnClickListener { continueOnClick() }
+
+        // Use EditText as a date picker
         bank_account_birth.setOnClickListener { showDatePicker() }
         bank_account_birth.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 showDatePicker()
             }
         }
+        bank_account_birth.showSoftInputOnFocus = false
 
         // Initialize validity checks
         validityChecks.put("address", false)
@@ -70,11 +73,11 @@ class BankAccountActivity : AppCompatActivity() {
         val intent = Intent(this, BankInformationActivity::class.java)
         val data = Bundle()
         data.putString("address", bank_account_address.text.toString())
-        data.putString("city", bank_account_city.toString())
-        data.putString("province", bank_account_province.toString())
-        data.putString("postal", bank_account_postal.toString())
-        data.putString("country", bank_account_country.toString())
-        data.putString("birth", bank_account_birth.toString())
+        data.putString("city", bank_account_city.text.toString())
+        data.putString("province", bank_account_province.text.toString())
+        data.putString("postal", bank_account_postal.text.toString())
+        data.putString("country", bank_account_country.text.toString())
+        data.putString("birth", bank_account_birth.text.toString())
         intent.putExtra(this.BUNDLE_KEY, data)
         startActivity(intent)
     }

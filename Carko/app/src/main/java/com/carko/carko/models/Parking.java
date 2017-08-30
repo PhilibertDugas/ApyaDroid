@@ -3,7 +3,7 @@ package com.carko.carko.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.carko.carko.JSONHelper;
+import com.carko.carko.utils.JSONHelper;
 import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONObject;
 
