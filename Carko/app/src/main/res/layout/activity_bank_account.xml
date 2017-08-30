@@ -31,6 +31,7 @@
             android:background="@drawable/rounded_primary_box"/>
 
         <EditText
+            android:id="@+id/bank_account_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bank_account_address_hint"
@@ -38,6 +39,7 @@
             android:backgroundTint="@android:color/white"
             android:inputType="textPostalAddress"/>
         <EditText
+            android:id="@+id/bank_account_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -45,6 +47,7 @@
             android:textColor="@android:color/white"
             android:backgroundTint="@android:color/white" />
         <EditText
+            android:id="@+id/bank_account_province"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -52,6 +55,7 @@
             android:textColor="@android:color/white"
             android:backgroundTint="@android:color/white" />
         <EditText
+            android:id="@+id/bank_account_postal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -59,6 +63,7 @@
             android:textColor="@android:color/white"
             android:backgroundTint="@android:color/white"/>
         <EditText
+            android:id="@+id/bank_account_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -76,12 +81,14 @@
             android:inputType="none" />
 
         <Button
+            android:id="@+id/bank_account_continue_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="32dp"
             android:text="@string/bank_account_continue_button"
-            android:background="@drawable/round_corner_button_confirm"/>
+            android:background="@drawable/round_corner_button_confirm"
+            android:enabled="false"/>
 
     </LinearLayout>
 

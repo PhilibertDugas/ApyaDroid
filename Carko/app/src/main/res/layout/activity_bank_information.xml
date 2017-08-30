@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.carko.carko.context.BankInformationActivity">
+    tools:context="com.carko.carko.context.BankInformationActivity"
+    android:background="@color/colorPrimaryDark">
 
     <include layout="@layout/app_bar"
         android:id="@+id/toolbar_include"/>
@@ -27,6 +28,31 @@
             android:text="@string/bank_info_stripe_message"
             android:textColor="@android:color/white"
             android:gravity="center"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="@string/bank_information_routing_number_hint"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/bank_information_account_number_hint"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/check_english"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:text="@string/bank_information_save_button"
+            android:background="@drawable/round_corner_button_confirm"/>
 
     </LinearLayout>
 

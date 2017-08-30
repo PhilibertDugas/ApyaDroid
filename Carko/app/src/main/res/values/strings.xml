@@ -69,6 +69,9 @@
     <string name="bank_info_stripe_message">
         Apya does not store or share any banking information.
         All banking information is communicated through Stripe.</string>
+    <string name="bank_information_routing_number_hint">Routing number</string>
+    <string name="bank_information_account_number_hint">Account number</string>
+    <string name="bank_information_save_button">Save</string>
 
     <!-- Marker info -->
     <string name="marker_info_tap">Tap to continue…</string>
